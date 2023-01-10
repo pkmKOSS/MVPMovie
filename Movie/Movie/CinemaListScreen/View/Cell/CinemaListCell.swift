@@ -13,7 +13,8 @@ final class CinemaListTableViewCell: UITableViewCell {
     private var ratingLabel = UILabel()
     private var countOfVoteLabel = UILabel()
     private var actionHandler: TapAction?
-    private var cinemaDescriprion: DescriptionScreenHelper?
+    private var cinemaDescriprion: CinemaDescription?
+    private var imageData: Data?
 
     // MARK: Init
 
@@ -29,13 +30,15 @@ final class CinemaListTableViewCell: UITableViewCell {
     // MARK: - Public methods
 
     func configureCell(
-        description: DescriptionScreenHelper,
-        handler: TapAction?
+        description: CinemaDescription,
+        handler: TapAction?,
+        imageData: Data?
     ) {
         actionHandler = handler
         cinemaDescriprion = description
         guard let cinemaHelper = cinemaDescriprion else { return }
-        configureCinemaAvatarImageView(imageData: cinemaHelper.imageData)
+        self.imageData = imageData
+        configureCinemaAvatarImageView(imageData: imageData ?? Data())
         configureCinemaNameLabel(title: cinemaHelper.title)
         configureCinemaDescriptionLabel(modelOverview: cinemaHelper.modelOverview)
         configureRatingLabel(modelVoteAverage: cinemaHelper.modelVoteAverage)
@@ -155,6 +158,6 @@ final class CinemaListTableViewCell: UITableViewCell {
         else {
             return
         }
-        tapAction(helper)
+        tapAction(helper, imageData ?? Data())
     }
 }

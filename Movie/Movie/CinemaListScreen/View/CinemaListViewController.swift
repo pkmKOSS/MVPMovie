@@ -4,46 +4,23 @@
 import UIKit
 
 /// Экран со списком кинофильмов.
-final class CinemaListViewController: UIViewController {
-
+final class CinemaListViewController: UIViewController, CinemaListViewProtocol {
     // MARK: - Private types
 
     enum CellIdentifiers: String {
         case cinemaListIdentifier = "CinemaListCell"
     }
 
+    // MARK: - Public properties
+
+    var presenter: CinemaListPresenterProtocol!
+
     // MARK: - Private properties
+
     private let condition = NSCondition()
-
-    private var cinemaInfo: CinemaInfoProtocol? {
-        willSet {
-            DispatchQueue.main.async {
-                self.descriptionScreenHelper = newValue?.results.map { result in
-                        let imageData = self.getImage(posterPath: result.posterPath, size: .w500)
-
-                        self.condition.wait()
-
-                        return DescriptionScreenHelper(
-                            title: result.title,
-                            imageData: imageData,
-                            modelOverview: result.overview,
-                            modelVoteAverage: result.voteAverage,
-                            modelVoteCount: result.voteCount
-                        )
-                }
-            }
-        }
-    }
-
-    private var descriptionScreenHelper: [DescriptionScreenHelper]? {
-        didSet {
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                self.cinemaListTableView.reloadData()
-            }
-        }
-    }
-
+    private var descriptionScreenHelper: [CinemaDescription] = []
+    private var imageDataMap: [String: Data] = [:]
+    private var cinemaArray: CinemaInfoProtocol?
     private var actionHandler: TapAction?
 
     // MARK: - Private visual components
@@ -58,7 +35,37 @@ final class CinemaListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         addSubviews()
-        getRequest()
+        fetchCinema()
+    }
+
+    func showCinemaPoster(imageData: Data, posterPath: String) {
+        imageDataMap[posterPath] = imageData
+        DispatchQueue.main.async {
+            let numberOfRow = self.descriptionScreenHelper.firstIndex { cinema in
+                guard cinema.posterPath == posterPath else { return false }
+                return true
+            }
+
+            let indexPath = IndexPath(row: numberOfRow ?? 0, section: 0)
+            self.cinemaListTableView.reloadRows(at: [indexPath], with: .automatic)
+        }
+    }
+
+    func showCinema(cinema: CinemaInfoProtocol) {
+        cinema.results.forEach { result in
+            self.getImage(posterPath: result.posterPath, size: .w500)
+            descriptionScreenHelper.append(CinemaDescription(
+                title: result.title,
+                modelOverview: result.overview,
+                modelVoteAverage: result.voteAverage,
+                modelVoteCount: result.voteCount,
+                posterPath: result.posterPath
+            ))
+        }
+
+        DispatchQueue.main.async {
+            self.cinemaListTableView.reloadData()
+        }
     }
 
     // MARK: - private methods
@@ -162,97 +169,43 @@ final class CinemaListViewController: UIViewController {
         showNewCinemaButton.clipsToBounds = true
     }
 
-    private func getRequest() {
-        NetworkManager.manager.getCinema(typeOfRequest: .getPopular) { result in
-            switch result {
-            case let .succes(cinema):
-                self.cinemaInfo = cinema as? CinemaInfoProtocol
-            case let .failure(cinema):
-                print("error: - \(cinema.localizedDescription)")
-            }
-            DispatchQueue.main.async {
-                self.cinemaListTableView.reloadData()
-            }
-        }
+    private func fetchCinema() {
+        presenter.fetchCinema(typeOfCinema: .upcomingCinema)
     }
 
     private func configureTapAction() {
-        actionHandler = { [weak self] helper in
+        actionHandler = { [weak self] helper, image in
             guard let self = self else { return }
-            let viewController = CinemaDescriptionViewController(helper: helper)
-            self.navigationController?.pushViewController(viewController, animated: true)
+            self.presenter.routToDescription(cinemaDescription: helper, posterData: image, rootViewController: self)
         }
     }
 
     private func getImage(
         posterPath: String,
-        size: SizeOfImages) -> Data {
-        var imageData = Data()
-        NetworkManager.manager.getImage(
-            posterPath: posterPath,
-            size: size
-        ) { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case let .succes(data):
-                imageData = data
-                self.condition.signal()
-            case let .failure(cinema):
-                print(cinema.localizedDescription)
-            }
-        }
-            return imageData
+        size: SizeOfImages
+    ) {
+        presenter.fetchImage(posterPath: posterPath, size: size)
     }
 
     // MARK: - @objc private methods
 
     @objc private func getUpcomingCinemaAction() {
-        NetworkManager.manager.getCinema(typeOfRequest: .getUpcoming) { result in
-            switch result {
-            case let .succes(cinema):
-                self.cinemaInfo = cinema as? InfoAboutCinema
-            case let .failure(cinema):
-                print("error: - \(cinema.localizedDescription)")
-            }
-            DispatchQueue.main.async {
-                self.cinemaListTableView.reloadData()
-            }
-        }
+        presenter.fetchCinema(typeOfCinema: .upcomingCinema)
     }
 
     @objc private func getPopularCinemaAction() {
-        NetworkManager.manager.getCinema(typeOfRequest: .getPopular) { result in
-            switch result {
-            case let .succes(cinema):
-                self.cinemaInfo = cinema as? InfoAboutPopularCinema
-            case let .failure(cinema):
-                print("error: - \(cinema.localizedDescription)")
-            }
-            DispatchQueue.main.async {
-                self.cinemaListTableView.reloadData()
-            }
-        }
+        presenter.fetchCinema(typeOfCinema: .popularCinema)
     }
 
     @objc private func getNewCinemaAction() {
-        NetworkManager.manager.getCinema(typeOfRequest: .getNew) { result in
-            switch result {
-            case let .succes(cinema):
-                self.cinemaInfo = cinema as? InfoAboutCinema
-            case let .failure(cinema):
-                print("error: - \(cinema.localizedDescription)")
-            }
-            DispatchQueue.main.async {
-                self.cinemaListTableView.reloadData()
-            }
-        }
+        presenter.fetchCinema(typeOfCinema: .newCinema)
     }
 }
 
 // Имплементация UITableViewDelegate, UITableViewDataSource
 extension CinemaListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let count = cinemaInfo?.results.count else { return 0 }
+        let count = descriptionScreenHelper.count
         return count
     }
 
@@ -263,12 +216,13 @@ extension CinemaListViewController: UITableViewDelegate, UITableViewDataSource {
                 for: indexPath
             ) as? CinemaListTableViewCell
         else { return UITableViewCell() }
-        guard let descriptionArray = descriptionScreenHelper else { return UITableViewCell() }
-        guard let dataForDescriptionScreen = descriptionArray[safe: indexPath.row] else { return UITableViewCell() }
+
         cell.configureCell(
-            description: dataForDescriptionScreen,
-            handler: actionHandler
+            description: descriptionScreenHelper[indexPath.row],
+            handler: actionHandler,
+            imageData: imageDataMap[descriptionScreenHelper[indexPath.row].posterPath]
         )
+
         return cell
     }
 

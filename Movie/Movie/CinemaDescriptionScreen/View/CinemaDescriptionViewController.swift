@@ -4,31 +4,36 @@
 import UIKit
 
 /// Экран с подробным описанием фильма.
-final class CinemaDescriptionViewController: UIViewController {
+final class CinemaDescriptionViewController: UIViewController, CinemaDescriptionViewProtocol {
     // MARK: - Private enums
 
-    enum CellTypes {
+    private enum CellTypes {
         case posterCell
         case buttonsCell
         case overviewCell
         case ratingCell
     }
 
-    enum CellIdentifier: String {
+    private enum CellIdentifier: String {
         case posterCellIdentifier = "PosterTableViewCell"
         case buttonsCellIdentifier = "ButtonsTableViewCell"
         case overviewCellIdentifier = "OverviewTableViewCell"
         case ratingCellIdentifier = "RatingTableViewCell"
     }
 
+    // MARK: - Public properties
+
+    var presenter: CinemaDescriptionPresenterProtocol!
+
     // MARK: - Private properties
 
-    private let descriptionHelper: DescriptionScreenHelper
+    private let descriptionHelper: CinemaDescription
     private let cellTypes: [CellTypes] = [.posterCell, .buttonsCell, .overviewCell, .ratingCell]
 
     // MARK: - Private visual components
 
     private var tableView = UITableView()
+    private var image: UIImage
 
     // MARK: - Life cycle
 
@@ -39,8 +44,9 @@ final class CinemaDescriptionViewController: UIViewController {
 
     // MARK: Init
 
-    init(helper: DescriptionScreenHelper) {
-        self.descriptionHelper = helper
+    init(helper: CinemaDescription, posterData: Data) {
+        descriptionHelper = helper
+        image = UIImage(data: posterData) ?? UIImage()
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -69,10 +75,22 @@ final class CinemaDescriptionViewController: UIViewController {
 
     private func makeTableViewLayout() {
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.register(PosterTableViewCell.self, forCellReuseIdentifier: CellIdentifier.posterCellIdentifier.rawValue)
-        tableView.register(ButtonsTableViewCell.self, forCellReuseIdentifier: CellIdentifier.buttonsCellIdentifier.rawValue)
-        tableView.register(OverviewTableViewCell.self, forCellReuseIdentifier: CellIdentifier.overviewCellIdentifier.rawValue)
-        tableView.register(RatingTableViewCell.self, forCellReuseIdentifier: CellIdentifier.ratingCellIdentifier.rawValue)
+        tableView.register(
+            PosterTableViewCell.self,
+            forCellReuseIdentifier: CellIdentifier.posterCellIdentifier.rawValue
+        )
+        tableView.register(
+            ButtonsTableViewCell.self,
+            forCellReuseIdentifier: CellIdentifier.buttonsCellIdentifier.rawValue
+        )
+        tableView.register(
+            OverviewTableViewCell.self,
+            forCellReuseIdentifier: CellIdentifier.overviewCellIdentifier.rawValue
+        )
+        tableView.register(
+            RatingTableViewCell.self,
+            forCellReuseIdentifier: CellIdentifier.ratingCellIdentifier.rawValue
+        )
 
         NSLayoutConstraint.activate([
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -99,7 +117,7 @@ extension CinemaDescriptionViewController: UITableViewDataSource, UITableViewDel
                     for: indexPath
                 ) as? PosterTableViewCell
             else { return UITableViewCell() }
-            cell.configureCell(imageData: descriptionHelper.imageData)
+            cell.configureCell(imageData: image)
             return cell
         case .buttonsCell:
             guard let

@@ -3,4 +3,4 @@
 
 import Foundation
 
-typealias TapAction = (DescriptionScreenHelper) -> ()
+typealias TapAction = (CinemaDescription, Data) -> ()

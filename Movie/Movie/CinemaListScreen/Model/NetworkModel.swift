@@ -2,13 +2,40 @@
 // Copyright © RoadMap. All rights reserved.
 
 import Foundation
+import SwiftyJSON
 
 /// Сведения о грядущих новинках.
-struct InfoAboutCinema: Codable, CinemaInfoProtocol {
+struct InfoAboutCinema: JSONCodable, CinemaInfoProtocol {
     let dates: Dates
     let page: Int
-    var results: [Result]
     let totalPages, totalResults: Int
+    var results: [Result]
+
+    init(json: SwiftyJSON.JSON) {
+        print(json)
+        dates = Dates(maximum: json["dates", "maximum"].stringValue, minimum: json["dates", "minimum"].stringValue)
+        page = json["page"].intValue
+        results = json["results"].arrayValue.map { result in
+            Result(
+                adult: result["adult"].boolValue,
+                backdropPath: result["backdropPath"].stringValue,
+                genreIDS: [],
+                id: result["id"].intValue,
+                originalLanguage: result["originalLanguage"].stringValue,
+                originalTitle: result["originalTitle"].stringValue,
+                overview: result["overview"].stringValue,
+                popularity: result["popularity"].doubleValue,
+                posterPath: result["poster_path"].stringValue,
+                releaseDate: result["releaseDate"].stringValue,
+                title: result["title"].stringValue,
+                video: result["video"].boolValue,
+                voteAverage: result["vote_average"].doubleValue,
+                voteCount: result["vote_count"].intValue
+            )
+        }
+        totalPages = json["totalPages"].intValue
+        totalResults = json["totalResults"].intValue
+    }
 
     enum CodingKeys: String, CodingKey {
         case dates, page, results
@@ -18,10 +45,35 @@ struct InfoAboutCinema: Codable, CinemaInfoProtocol {
 }
 
 /// Сведения о популярных кинофильмах.
-struct InfoAboutPopularCinema: Codable, CinemaInfoProtocol {
+struct InfoAboutPopularCinema: JSONCodable, CinemaInfoProtocol {
     let page: Int
-    var results: [Result]
     let totalPages, totalResults: Int
+    var results: [Result]
+
+    init(json: SwiftyJSON.JSON) {
+        print(json)
+        page = json["page"].intValue
+        totalPages = json["totalPages"].intValue
+        totalResults = json["totalResults"].intValue
+        results = json["results"].arrayValue.map { result in
+            Result(
+                adult: result["adult"].boolValue,
+                backdropPath: result["backdropPath"].stringValue,
+                genreIDS: [],
+                id: result["id"].intValue,
+                originalLanguage: result["originalLanguage"].stringValue,
+                originalTitle: result["originalTitle"].stringValue,
+                overview: result["overview"].stringValue,
+                popularity: result["popularity"].doubleValue,
+                posterPath: result["posterPath"].stringValue,
+                releaseDate: result["releaseDate"].stringValue,
+                title: result["title"].stringValue,
+                video: result["video"].boolValue,
+                voteAverage: result["vote_average"].doubleValue,
+                voteCount: result["vote_count"].intValue
+            )
+        }
+    }
 
     enum CodingKeys: String, CodingKey {
         case page, results

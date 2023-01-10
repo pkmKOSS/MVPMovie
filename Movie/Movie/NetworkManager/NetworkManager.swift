@@ -1,7 +1,14 @@
 // NetworkManager.swift
 // Copyright © RoadMap. All rights reserved.
 
+import Alamofire
 import Foundation
+import SwiftyJSON
+
+/// Добавляет инициализатор для работы с дженерик методами в сетевом слое.
+protocol JSONCodable: Codable {
+    init(json: JSON)
+}
 
 /// Менеджер для работы с сетью.
 final class NetworkManager {
@@ -26,6 +33,7 @@ final class NetworkManager {
                 complition(result)
             }
         case .getPopular:
+            break
             sendRequest(
                 urlString: URLStrings.getPopular.rawValue,
                 model: InfoAboutPopularCinema.self
@@ -54,43 +62,36 @@ final class NetworkManager {
     ) {
         let urlString = "\(StringConstants.imageBaseUrl)\(size.rawValue)\(posterPath)"
         guard let url = URL(string: urlString) else { return }
-
-        let request = URLRequest(url: url)
-        URLSession.shared.dataTask(with: request) { data, _, error in
-            if let data = data {
-                let result = GetImageResult.succes(cinema: data)
-                complition(result)
-            } else if let error = error {
-                let result = GetImageResult.failure(cinema: error)
-                complition(result)
-            }
-        }.resume()
+        AF.request(url).response { response in
+            guard
+                let data = response.data
+            else { return }
+            let dataResult = GetImageResult.succes(cinema: data)
+            complition(dataResult)
+        }
     }
 
-    private func sendRequest<T: Codable>(
+    private func sendRequest<T: JSONCodable>(
         urlString: String,
         model: T.Type,
         complition: @escaping (GetPostResult) -> Void
     ) {
         guard let url = URL(string: urlString) else { return }
-
-        let request = URLRequest(url: url)
-        URLSession.shared.dataTask(with: request) { data, _, error in
-            guard let cinematics = try? JSONDecoder().decode(model.self, from: data ?? Data()) else { return }
-            let result = GetPostResult.succes(cinema: cinematics)
-
-            complition(result)
-
-            if let error = error {
+        AF.request(url).responseJSON { response in
+            switch response.result {
+            case let .success(value):
+                let json = JSON(value)
+                complition(GetPostResult.succes(cinema: model.init(json: json)))
+            case let .failure(error):
                 complition(GetPostResult.failure(cinema: error))
             }
-        }.resume()
+        }
     }
 }
 
 /// Результат обращения к веб сервису с кинофильмами.
 enum GetPostResult {
-    case succes(cinema: Codable)
+    case succes(cinema: JSONCodable)
     case failure(cinema: Error)
 }
 
@@ -119,8 +120,8 @@ enum SizeOfImages: String {
 /// Ссылки для запросов.
 enum URLStrings: String {
     case getUpcoming =
-        "https://api.themoviedb.org/3/movie/upcoming?api_key=c7f7d1dc5a6aa58fd2f3602748ad9c64&language=ru&page-1"
+        "https://api.themoviedb.org/3/movie/upcoming?api_key=4e0be2c22f7268edffde97481d49064a&language=ru&page-1"
     case getPopular =
-        "https://api.themoviedb.org/3/movie/popular?api_key=c7f7d1dc5a6aa58fd2f3602748ad9c64&language=ru&page-2"
-    case getNew = "https://api.themoviedb.org/3/movie/latest?c7f7d1dc5a6aa58fd2f3602748ad9c64&language=ru&page-3"
+        "https://api.themoviedb.org/3/movie/popular?api_key=4e0be2c22f7268edffde97481d49064a&language=ru&page-2"
+    case getNew = "https://api.themoviedb.org/3/movie/latest?4e0be2c22f7268edffde97481d49064a&language=ru&page-3"
 }

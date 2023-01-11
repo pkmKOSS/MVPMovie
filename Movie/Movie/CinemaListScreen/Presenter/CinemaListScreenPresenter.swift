@@ -14,7 +14,8 @@ final class CinemaListScreenPresenter: CinemaListPresenterProtocol {
     // MARK: - public methods
 
     func fetchCinema(typeOfCinema: TypeOfCinema) {
-        worker.fetchCinema(typeOfCinema: typeOfCinema) { response in
+        worker.fetchCinema(typeOfCinema: typeOfCinema) { [ weak self ] response in
+            guard let self = self else { return }
             self.presentCinema(cinema: response)
         }
     }

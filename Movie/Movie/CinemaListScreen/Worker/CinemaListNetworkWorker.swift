@@ -26,6 +26,7 @@ final class CinemaListNetworkWorker: CinemaListNetworkWorkerProtocol {
     }
 
     func fetchCinema(typeOfCinema: TypeOfCinema, completion: @escaping (CinemaInfoProtocol) -> ()) {
+
         let kindOfCinema: TypeOfCinemaRequset = {
             switch typeOfCinema {
             case .popularCinema:

@@ -52,7 +52,8 @@ final class CinemaListViewController: UIViewController, CinemaListViewProtocol {
     }
 
     func showCinema(cinema: CinemaInfoProtocol) {
-        cinema.results.forEach { result in
+        cinema.results.forEach { [weak self] result in
+            guard let self = self else { return }
             self.getImage(posterPath: result.posterPath, size: .w500)
             descriptionScreenHelper.append(CinemaDescription(
                 title: result.title,
@@ -205,8 +206,7 @@ final class CinemaListViewController: UIViewController, CinemaListViewProtocol {
 // Имплементация UITableViewDelegate, UITableViewDataSource
 extension CinemaListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let count = descriptionScreenHelper.count
-        return count
+        return descriptionScreenHelper.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

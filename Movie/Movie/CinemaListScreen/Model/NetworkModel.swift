@@ -12,7 +12,6 @@ struct InfoAboutCinema: JSONCodable, CinemaInfoProtocol {
     var results: [Result]
 
     init(json: SwiftyJSON.JSON) {
-        print(json)
         dates = Dates(maximum: json["dates", "maximum"].stringValue, minimum: json["dates", "minimum"].stringValue)
         page = json["page"].intValue
         results = json["results"].arrayValue.map { result in
@@ -46,12 +45,14 @@ struct InfoAboutCinema: JSONCodable, CinemaInfoProtocol {
 
 /// Сведения о популярных кинофильмах.
 struct InfoAboutPopularCinema: JSONCodable, CinemaInfoProtocol {
+    /// Номер страницы
     let page: Int
+    /// Всего страниц и всего результатов
     let totalPages, totalResults: Int
+    /// Результаты - массив с фильмами.
     var results: [Result]
 
     init(json: SwiftyJSON.JSON) {
-        print(json)
         page = json["page"].intValue
         totalPages = json["totalPages"].intValue
         totalResults = json["totalResults"].intValue
@@ -89,15 +90,25 @@ struct Dates: Codable {
 
 /// Сведения о конкретном фильме.
 struct Result: Codable {
+    /// Любительский ли фильм
     let adult: Bool
+    /// Адрес фонового изображения
     let backdropPath: String
+    /// Массив с ID жанров
     let genreIDS: [Int]
+    /// ID фильма.
     let id: Int
+    /// Оригинальный язык, оригинальное название, оригинально описание
     let originalLanguage, originalTitle, overview: String
+    /// Популярность
     let popularity: Double
+    /// Адрес изображения постера, дата релиза, название
     let posterPath, releaseDate, title: String
+    /// Есть ли трейлер
     let video: Bool
+    /// Средняя оценка
     let voteAverage: Double
+    /// Количество оценок
     let voteCount: Int
 
     enum CodingKeys: String, CodingKey {

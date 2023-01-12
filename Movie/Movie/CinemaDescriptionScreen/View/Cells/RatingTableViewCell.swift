@@ -16,7 +16,7 @@ final class RatingTableViewCell: UITableViewCell {
 
     // MARK: - Public methods
 
-    func configureCell(
+    func configure(
         countOfVote: Int,
         avarageVote: Double
     ) {
@@ -44,8 +44,10 @@ final class RatingTableViewCell: UITableViewCell {
         selectionStyle = .none
     }
 
-    private func configureViews(countOfVote: Int,
-                                avarageVote: Double) {
+    private func configureViews(
+        countOfVote: Int,
+        avarageVote: Double
+    ) {
         configreContentView()
         configurePremieraDateLeftLabel()
         configurePremieraDateRigthLabel()

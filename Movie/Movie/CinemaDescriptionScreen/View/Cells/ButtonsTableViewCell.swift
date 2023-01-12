@@ -5,7 +5,6 @@ import UIKit
 
 /// Ячейка с кнопками показа трейлера и избранным.
 final class ButtonsTableViewCell: UITableViewCell {
-
     // MARK: - Private visual components
 
     private var showTrailerButton = UIButton()
@@ -64,7 +63,7 @@ final class ButtonsTableViewCell: UITableViewCell {
         showTrailerButton.clipsToBounds = true
     }
 
-    private func makeShowTrailerButtonLayout(){
+    private func makeShowTrailerButtonLayout() {
         NSLayoutConstraint.activate([
             showTrailerButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30),
             showTrailerButton.topAnchor.constraint(equalTo: topAnchor, constant: 20),
@@ -79,7 +78,7 @@ final class ButtonsTableViewCell: UITableViewCell {
         favoriteFlagImageView.contentMode = .scaleAspectFill
     }
 
-    private func makeLayoutFavoriteFlagImageView(){
+    private func makeLayoutFavoriteFlagImageView() {
         NSLayoutConstraint.activate([
             favoriteFlagImageView.topAnchor.constraint(equalTo: showTrailerButton.bottomAnchor, constant: 10),
             favoriteFlagImageView.leadingAnchor.constraint(equalTo: showTrailerButton.leadingAnchor, constant: 32),
@@ -94,7 +93,7 @@ final class ButtonsTableViewCell: UITableViewCell {
         showLaterLabel.text = StringConstants.showLaterLabelText
     }
 
-    private func makeShowLaterLabelLayout(){
+    private func makeShowLaterLabelLayout() {
         NSLayoutConstraint.activate([
             showLaterLabel.topAnchor.constraint(equalTo: favoriteFlagImageView.bottomAnchor, constant: 5),
             showLaterLabel.heightAnchor.constraint(equalToConstant: 30),
@@ -110,7 +109,7 @@ final class ButtonsTableViewCell: UITableViewCell {
         downloadImageView.contentMode = .scaleAspectFill
     }
 
-    private func makeDownloadImageViewLayout(){
+    private func makeDownloadImageViewLayout() {
         NSLayoutConstraint.activate([
             downloadImageView.topAnchor.constraint(equalTo: showTrailerButton.bottomAnchor, constant: 10),
             downloadImageView.trailingAnchor.constraint(equalTo: showTrailerButton.trailingAnchor, constant: -32),
@@ -125,7 +124,7 @@ final class ButtonsTableViewCell: UITableViewCell {
         downloadLabel.text = StringConstants.downloadLabelText
     }
 
-    private func makeDownloadLabelLayout(){
+    private func makeDownloadLabelLayout() {
         NSLayoutConstraint.activate([
             downloadLabel.topAnchor.constraint(equalTo: downloadImageView.bottomAnchor, constant: 5),
             downloadLabel.heightAnchor.constraint(equalToConstant: 30),

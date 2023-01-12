@@ -5,7 +5,6 @@ import UIKit
 
 /// Ячейка с паспортом.
 final class PosterTableViewCell: UITableViewCell {
-
     // MARK: - Private visual components
 
     private var posterImageView = UIImageView()
@@ -13,17 +12,17 @@ final class PosterTableViewCell: UITableViewCell {
     // MARK: - Public methods
 
     func configureCell(imageData: Data) {
-        configurePosterImageView(imageData: imageData)
+        configurePosterImageView(posterImage: UIImage(data: imageData) ?? UIImage())
         makePosterImageViewLayout()
         configureContentView()
     }
 
     // MARK: - Private methods
 
-    private func configurePosterImageView(imageData: Data) {
+    private func configurePosterImageView(posterImage: UIImage) {
         addSubview(posterImageView)
         posterImageView.translatesAutoresizingMaskIntoConstraints = false
-        posterImageView.image = UIImage(data: imageData)
+        posterImageView.image = posterImage
         posterImageView.contentMode = .scaleAspectFill
     }
 

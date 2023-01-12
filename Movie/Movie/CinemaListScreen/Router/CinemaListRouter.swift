@@ -8,8 +8,8 @@ final class CinemaListRouter: CinemaListRouterProtocol {
     // MARK: - Public methods
 
     func routTo(description: CinemaDescription, imageData: Data, rootViewController: CinemaListViewProtocol) {
-        let cinemaDescriptionScreenBuilder = CinemaDescriptionBuilder()
-        let cinemaDescriptionScreenVC = cinemaDescriptionScreenBuilder.build(
+        let cinemaDescriptionScreenBuilder = Builder()
+        let cinemaDescriptionScreenVC = cinemaDescriptionScreenBuilder.makeCinemaDescriptionModule(
             cinemaDescription: description,
             posterData: imageData
         )

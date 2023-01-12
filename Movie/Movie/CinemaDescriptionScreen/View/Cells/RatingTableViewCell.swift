@@ -16,7 +16,7 @@ final class RatingTableViewCell: UITableViewCell {
 
     // MARK: - Public methods
 
-    func configureCell(
+    func configure(
         countOfVote: Int,
         avarageVote: Double
     ) {

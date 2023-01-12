@@ -4,7 +4,7 @@
 import UIKit
 
 /// Экран с подробным описанием фильма.
-final class CinemaDescriptionViewController: UIViewController, CinemaDescriptionViewProtocol {
+final class CinemaDescriptionViewController: UIViewController {
     // MARK: - Private enums
 
     private enum CellTypes {
@@ -29,11 +29,11 @@ final class CinemaDescriptionViewController: UIViewController, CinemaDescription
 
     private let descriptionHelper: CinemaDescription
     private let cellTypes: [CellTypes] = [.posterCell, .buttonsCell, .overviewCell, .ratingCell]
+    private var imageData: Data
 
     // MARK: - Private visual components
 
     private var tableView = UITableView()
-    private var image: UIImage
 
     // MARK: - Life cycle
 
@@ -46,7 +46,7 @@ final class CinemaDescriptionViewController: UIViewController, CinemaDescription
 
     init(helper: CinemaDescription, posterData: Data) {
         descriptionHelper = helper
-        image = UIImage(data: posterData) ?? UIImage()
+        imageData = posterData
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -117,7 +117,7 @@ extension CinemaDescriptionViewController: UITableViewDataSource, UITableViewDel
                     for: indexPath
                 ) as? PosterTableViewCell
             else { return UITableViewCell() }
-            cell.configureCell(imageData: image)
+            cell.configureCell(imageData: imageData)
             return cell
         case .buttonsCell:
             guard let
@@ -144,7 +144,7 @@ extension CinemaDescriptionViewController: UITableViewDataSource, UITableViewDel
                     for: indexPath
                 ) as? RatingTableViewCell
             else { return UITableViewCell() }
-            cell.configureCell(
+            cell.configure(
                 countOfVote: descriptionHelper.modelVoteCount,
                 avarageVote: descriptionHelper.modelVoteAverage
             )
@@ -158,3 +158,5 @@ extension CinemaDescriptionViewController: UITableViewDataSource, UITableViewDel
         UITableView.automaticDimension
     }
 }
+
+extension CinemaDescriptionViewController: CinemaDescriptionViewProtocol {}

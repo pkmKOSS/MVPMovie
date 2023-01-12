@@ -1,10 +1,10 @@
-// CinemaListNetworkWorkerProtocol.swift
+// DataRepositoryProtocol.swift
 // Copyright © RoadMap. All rights reserved.
 
 import Foundation
 
 /// Интерфейс воркера для работы с сетью экрана со списком фильмов.
-protocol CinemaListNetworkWorkerProtocol: AnyObject {
+protocol DataRepositoryProtocol: AnyObject {
     /// Загрузить список фильмов и их описание.
     /// - Parameters:
     ///   - typeOfCinema: тип фильмов.
@@ -15,7 +15,7 @@ protocol CinemaListNetworkWorkerProtocol: AnyObject {
     ///   - posterPath: Адрес изображения.
     ///   - size: Размер изображения.
     ///   - completion: Блок с Data изображения.
-    func getImage(
+    func fetchImage(
         posterPath: String,
         size: SizeOfImages,
         completion: @escaping (Data) -> ()

@@ -13,12 +13,12 @@ final class CinemaListViewController: UIViewController, CinemaListViewProtocol {
 
     // MARK: - Public properties
 
-    var presenter: CinemaListPresenterProtocol!
+    var presenter: CinemaListPresenterProtocol?
 
     // MARK: - Private properties
 
     private let condition = NSCondition()
-    private var descriptionScreenHelper: [CinemaDescription] = []
+    private var cinemaDescriptions: [CinemaDescription] = []
     private var imageDataMap: [String: Data] = [:]
     private var cinemaArray: CinemaInfoProtocol?
     private var actionHandler: TapAction?
@@ -41,7 +41,7 @@ final class CinemaListViewController: UIViewController, CinemaListViewProtocol {
     func showCinemaPoster(imageData: Data, posterPath: String) {
         imageDataMap[posterPath] = imageData
         DispatchQueue.main.async {
-            let numberOfRow = self.descriptionScreenHelper.firstIndex { cinema in
+            let numberOfRow = self.cinemaDescriptions.firstIndex { cinema in
                 guard cinema.posterPath == posterPath else { return false }
                 return true
             }
@@ -55,7 +55,7 @@ final class CinemaListViewController: UIViewController, CinemaListViewProtocol {
         cinema.results.forEach { [weak self] result in
             guard let self = self else { return }
             self.getImage(posterPath: result.posterPath, size: .w500)
-            descriptionScreenHelper.append(CinemaDescription(
+            cinemaDescriptions.append(CinemaDescription(
                 title: result.title,
                 modelOverview: result.overview,
                 modelVoteAverage: result.voteAverage,
@@ -171,13 +171,13 @@ final class CinemaListViewController: UIViewController, CinemaListViewProtocol {
     }
 
     private func fetchCinema() {
-        presenter.fetchCinema(typeOfCinema: .upcomingCinema)
+        presenter?.fetchCinema(typeOfCinema: .upcomingCinema)
     }
 
     private func configureTapAction() {
         actionHandler = { [weak self] helper, image in
             guard let self = self else { return }
-            self.presenter.routToDescription(cinemaDescription: helper, posterData: image, rootViewController: self)
+            self.presenter?.routToDescription(cinemaDescription: helper, posterData: image, rootViewController: self)
         }
     }
 
@@ -185,28 +185,28 @@ final class CinemaListViewController: UIViewController, CinemaListViewProtocol {
         posterPath: String,
         size: SizeOfImages
     ) {
-        presenter.fetchImage(posterPath: posterPath, size: size)
+        presenter?.fetchImage(posterPath: posterPath, size: size)
     }
 
     // MARK: - @objc private methods
 
     @objc private func getUpcomingCinemaAction() {
-        presenter.fetchCinema(typeOfCinema: .upcomingCinema)
+        presenter?.fetchCinema(typeOfCinema: .upcomingCinema)
     }
 
     @objc private func getPopularCinemaAction() {
-        presenter.fetchCinema(typeOfCinema: .popularCinema)
+        presenter?.fetchCinema(typeOfCinema: .popularCinema)
     }
 
     @objc private func getNewCinemaAction() {
-        presenter.fetchCinema(typeOfCinema: .newCinema)
+        presenter?.fetchCinema(typeOfCinema: .newCinema)
     }
 }
 
 // Имплементация UITableViewDelegate, UITableViewDataSource
 extension CinemaListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return descriptionScreenHelper.count
+        cinemaDescriptions.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -217,10 +217,10 @@ extension CinemaListViewController: UITableViewDelegate, UITableViewDataSource {
             ) as? CinemaListTableViewCell
         else { return UITableViewCell() }
 
-        cell.configureCell(
-            description: descriptionScreenHelper[indexPath.row],
+        cell.configure(
+            description: cinemaDescriptions[indexPath.row],
             handler: actionHandler,
-            imageData: imageDataMap[descriptionScreenHelper[indexPath.row].posterPath]
+            imageData: imageDataMap[cinemaDescriptions[indexPath.row].posterPath]
         )
 
         return cell

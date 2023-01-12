@@ -1,4 +1,4 @@
-// NetworkManager.swift
+// NetworkService.swift
 // Copyright © RoadMap. All rights reserved.
 
 import Alamofire
@@ -11,67 +11,8 @@ protocol JSONCodable: Codable {
 }
 
 /// Менеджер для работы с сетью.
-final class NetworkManager {
-    static let manager = NetworkManager()
-
-    private init() {}
-
-    private let shared = URLSession.shared
-    private let decoder = JSONDecoder()
-
-    /// Запросить список кинофильмов.
-    /// - Parameters:
-    ///   - typeOfRequest: Тип запроса в зависимости от конкретных характеристик кинофильмов.
-    ///   - handler: Возвращает массив кинофильмов или ошибку.
-    func getCinema(typeOfRequest: TypeOfCinemaRequset, complition: @escaping (GetPostResult) -> Void) {
-        switch typeOfRequest {
-        case .getUpcoming:
-            sendRequest(
-                urlString: URLStrings.getUpcoming.rawValue,
-                model: InfoAboutCinema.self
-            ) { result in
-                complition(result)
-            }
-        case .getPopular:
-            break
-            sendRequest(
-                urlString: URLStrings.getPopular.rawValue,
-                model: InfoAboutPopularCinema.self
-            ) { result in
-                complition(result)
-            }
-        case .getNew:
-            sendRequest(
-                urlString: URLStrings.getNew.rawValue,
-                model: InfoAboutCinema.self
-            ) { result in
-                complition(result)
-            }
-        }
-    }
-
-    /// Получить постер фильма.
-    /// - Parameters:
-    ///   - posterPath: адрес изображение. Получается как поле Result
-    ///   - size: Размер изображения.
-    ///   - complition: Замыкание.
-    func getImage(
-        posterPath: String,
-        size: SizeOfImages,
-        complition: @escaping (GetImageResult) -> Void
-    ) {
-        let urlString = "\(StringConstants.imageBaseUrl)\(size.rawValue)\(posterPath)"
-        guard let url = URL(string: urlString) else { return }
-        AF.request(url).response { response in
-            guard
-                let data = response.data
-            else { return }
-            let dataResult = GetImageResult.succes(cinema: data)
-            complition(dataResult)
-        }
-    }
-
-    private func sendRequest<T: JSONCodable>(
+final class NetworkService {
+    private static func sendRequest<T: JSONCodable>(
         urlString: String,
         model: T.Type,
         complition: @escaping (GetPostResult) -> Void
@@ -84,6 +25,35 @@ final class NetworkManager {
                 complition(GetPostResult.succes(cinema: model.init(json: json)))
             case let .failure(error):
                 complition(GetPostResult.failure(cinema: error))
+            }
+        }
+    }
+}
+
+/// NetworkServiceProtocol method
+extension NetworkService: NetworkServiceProtocol {
+    static func fetchCinema(typeOfRequest: TypeOfCinemaRequset, complition: @escaping (GetPostResult) -> Void) {
+        switch typeOfRequest {
+        case .getUpcoming:
+            sendRequest(
+                urlString: URLStrings.getUpcoming.rawValue,
+                model: InfoAboutCinema.self
+            ) { result in
+                complition(result)
+            }
+        case .getPopular:
+            sendRequest(
+                urlString: URLStrings.getPopular.rawValue,
+                model: InfoAboutPopularCinema.self
+            ) { result in
+                complition(result)
+            }
+        case .getNew:
+            sendRequest(
+                urlString: URLStrings.getNew.rawValue,
+                model: InfoAboutCinema.self
+            ) { result in
+                complition(result)
             }
         }
     }

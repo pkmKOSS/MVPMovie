@@ -11,35 +11,12 @@ struct InfoAboutCinema: JSONCodable, CinemaInfoProtocol {
     let totalPages, totalResults: Int
     var results: [Result]
 
-    init(json: SwiftyJSON.JSON) {
+    init(json: JSON) {
         dates = Dates(maximum: json["dates", "maximum"].stringValue, minimum: json["dates", "minimum"].stringValue)
         page = json["page"].intValue
-        results = json["results"].arrayValue.map { result in
-            Result(
-                adult: result["adult"].boolValue,
-                backdropPath: result["backdropPath"].stringValue,
-                genreIDS: [],
-                id: result["id"].intValue,
-                originalLanguage: result["originalLanguage"].stringValue,
-                originalTitle: result["originalTitle"].stringValue,
-                overview: result["overview"].stringValue,
-                popularity: result["popularity"].doubleValue,
-                posterPath: result["poster_path"].stringValue,
-                releaseDate: result["releaseDate"].stringValue,
-                title: result["title"].stringValue,
-                video: result["video"].boolValue,
-                voteAverage: result["vote_average"].doubleValue,
-                voteCount: result["vote_count"].intValue
-            )
-        }
+        results = json["results"].arrayValue.map { Result(json: $0) }
         totalPages = json["totalPages"].intValue
         totalResults = json["totalResults"].intValue
-    }
-
-    enum CodingKeys: String, CodingKey {
-        case dates, page, results
-        case totalPages = "total_pages"
-        case totalResults = "total_results"
     }
 }
 
@@ -52,34 +29,11 @@ struct InfoAboutPopularCinema: JSONCodable, CinemaInfoProtocol {
     /// Результаты - массив с фильмами.
     var results: [Result]
 
-    init(json: SwiftyJSON.JSON) {
+    init(json: JSON) {
         page = json["page"].intValue
         totalPages = json["totalPages"].intValue
         totalResults = json["totalResults"].intValue
-        results = json["results"].arrayValue.map { result in
-            Result(
-                adult: result["adult"].boolValue,
-                backdropPath: result["backdropPath"].stringValue,
-                genreIDS: [],
-                id: result["id"].intValue,
-                originalLanguage: result["originalLanguage"].stringValue,
-                originalTitle: result["originalTitle"].stringValue,
-                overview: result["overview"].stringValue,
-                popularity: result["popularity"].doubleValue,
-                posterPath: result["posterPath"].stringValue,
-                releaseDate: result["releaseDate"].stringValue,
-                title: result["title"].stringValue,
-                video: result["video"].boolValue,
-                voteAverage: result["vote_average"].doubleValue,
-                voteCount: result["vote_count"].intValue
-            )
-        }
-    }
-
-    enum CodingKeys: String, CodingKey {
-        case page, results
-        case totalPages = "total_pages"
-        case totalResults = "total_results"
+        results = json["results"].arrayValue.map { Result(json: $0) }
     }
 }
 
@@ -111,18 +65,22 @@ struct Result: Codable {
     /// Количество оценок
     let voteCount: Int
 
-    enum CodingKeys: String, CodingKey {
-        case adult
-        case backdropPath = "backdrop_path"
-        case genreIDS = "genre_ids"
-        case id
-        case originalLanguage = "original_language"
-        case originalTitle = "original_title"
-        case overview, popularity
-        case posterPath = "poster_path"
-        case releaseDate = "release_date"
-        case title, video
-        case voteAverage = "vote_average"
-        case voteCount = "vote_count"
+    init(
+        json: JSON
+    ) {
+        adult = json["adult"].boolValue
+        backdropPath = json["backdropPath"].stringValue
+        genreIDS = []
+        id = json["id"].intValue
+        originalLanguage = json["originalLanguage"].stringValue
+        originalTitle = json["originalTitle"].stringValue
+        overview = json["overview"].stringValue
+        popularity = json["popularity"].doubleValue
+        posterPath = json["poster_path"].stringValue
+        releaseDate = json["releaseDate"].stringValue
+        title = json["title"].stringValue
+        video = json["video"].boolValue
+        voteAverage = json["vote_average"].doubleValue
+        voteCount = json["vote_count"].intValue
     }
 }

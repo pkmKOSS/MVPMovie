@@ -4,4 +4,4 @@
 import Foundation
 
 /// Интерфейс представления экрана с описанием фильма
-protocol CinemaDescriptionViewProtocol {}
+protocol CinemaDescriptionViewProtocol: AnyObject {}

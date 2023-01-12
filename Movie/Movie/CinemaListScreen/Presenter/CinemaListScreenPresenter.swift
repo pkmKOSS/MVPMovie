@@ -7,30 +7,42 @@ import UIKit
 final class CinemaListScreenPresenter: CinemaListPresenterProtocol {
     // MARK: - public properties
 
-    var worker: CinemaListNetworkWorkerProtocol!
-    var viewController: CinemaListViewProtocol!
-    var router: CinemaListRouterProtocol!
+    var dataRepository: DataRepositoryProtocol?
+    var router: CinemaListRouterProtocol?
+    weak var view: CinemaListViewProtocol?
+
+    // MARK: - init
+
+    init(
+        dataRepository: DataRepositoryProtocol? = nil,
+        view: CinemaListViewProtocol? = nil,
+        router: CinemaListRouterProtocol? = nil
+    ) {
+        self.dataRepository = dataRepository
+        self.view = view
+        self.router = router
+    }
 
     // MARK: - public methods
 
     func fetchCinema(typeOfCinema: TypeOfCinema) {
-        worker.fetchCinema(typeOfCinema: typeOfCinema) { [ weak self ] response in
+        dataRepository?.fetchCinema(typeOfCinema: typeOfCinema) { [weak self] response in
             guard let self = self else { return }
             self.presentCinema(cinema: response)
         }
     }
 
     func presentCinema(cinema: CinemaInfoProtocol) {
-        viewController.showCinema(cinema: cinema)
+        view?.showCinema(cinema: cinema)
     }
 
     func fetchImage(
         posterPath: String,
         size: SizeOfImages
     ) {
-        worker.getImage(posterPath: posterPath, size: size) { [weak self] data in
+        dataRepository?.fetchImage(posterPath: posterPath, size: size) { [weak self] data in
             guard let self = self else { return }
-            self.viewController.showCinemaPoster(imageData: data, posterPath: posterPath)
+            self.view?.showCinemaPoster(imageData: data, posterPath: posterPath)
         }
     }
 
@@ -39,6 +51,6 @@ final class CinemaListScreenPresenter: CinemaListPresenterProtocol {
         posterData: Data,
         rootViewController: CinemaListViewProtocol
     ) {
-        router.routTo(description: cinemaDescription, imageData: posterData, rootViewController: rootViewController)
+        router?.routTo(description: cinemaDescription, imageData: posterData, rootViewController: rootViewController)
     }
 }

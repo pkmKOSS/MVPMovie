@@ -11,8 +11,8 @@ final class PosterTableViewCell: UITableViewCell {
 
     // MARK: - Public methods
 
-    func configureCell(imageData: UIImage) {
-        configurePosterImageView(posterImage: imageData)
+    func configureCell(imageData: Data) {
+        configurePosterImageView(posterImage: UIImage(data: imageData) ?? UIImage())
         makePosterImageViewLayout()
         configureContentView()
     }

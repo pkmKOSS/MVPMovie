@@ -29,7 +29,7 @@ final class CinemaListTableViewCell: UITableViewCell {
 
     // MARK: - Public methods
 
-    func configureCell(
+    func configure(
         description: CinemaDescription,
         handler: TapAction?,
         imageData: Data?

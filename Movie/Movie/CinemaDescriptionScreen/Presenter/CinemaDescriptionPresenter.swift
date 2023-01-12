@@ -7,5 +7,11 @@ import Foundation
 final class CinemaDescriptionPresenter: CinemaDescriptionPresenterProtocol {
     // MARK: Public properties
 
-    var viewController: CinemaDescriptionViewProtocol!
+    weak var view: CinemaDescriptionViewProtocol?
+    weak var router: CinemaDescriptionRouterProtocol?
+
+    init(view: CinemaDescriptionViewProtocol, router: CinemaDescriptionRouterProtocol) {
+        self.view = view
+        self.router = router
+    }
 }

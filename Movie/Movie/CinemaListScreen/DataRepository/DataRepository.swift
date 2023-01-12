@@ -1,18 +1,18 @@
-// CinemaListNetworkWorker.swift
+// DataRepository.swift
 // Copyright © RoadMap. All rights reserved.
 
 import Foundation
 
 /// Воркер для работы с сетью экрана списка фильмов.
-final class CinemaListNetworkWorker: CinemaListNetworkWorkerProtocol {
+final class DataRepository: DataRepositoryProtocol {
     // MARK: - public properties
 
     var cinemaInfo: CinemaInfoProtocol?
 
     // MARK: - public methods
 
-    func getImage(posterPath: String, size: SizeOfImages, completion: @escaping (Data) -> ()) {
-        NetworkManager.manager.getImage(
+    func fetchImage(posterPath: String, size: SizeOfImages, completion: @escaping (Data) -> ()) {
+        ImageService.getImage(
             posterPath: posterPath,
             size: size
         ) { result in
@@ -26,7 +26,6 @@ final class CinemaListNetworkWorker: CinemaListNetworkWorkerProtocol {
     }
 
     func fetchCinema(typeOfCinema: TypeOfCinema, completion: @escaping (CinemaInfoProtocol) -> ()) {
-
         let kindOfCinema: TypeOfCinemaRequset = {
             switch typeOfCinema {
             case .popularCinema:
@@ -38,7 +37,7 @@ final class CinemaListNetworkWorker: CinemaListNetworkWorkerProtocol {
             }
         }()
 
-        NetworkManager.manager.getCinema(typeOfRequest: kindOfCinema) { result in
+        NetworkService.fetchCinema(typeOfRequest: kindOfCinema) { result in
             switch result {
             case let .succes(cinema):
                 guard let cinemaResponse = cinema as? CinemaInfoProtocol else { return }

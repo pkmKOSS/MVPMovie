@@ -5,14 +5,7 @@ import Foundation
 import Security
 
 /// Сервис для кэширования данных.
-final class CacheService {
-    // MARK: - Public enum
-
-    /// Типы данных конвертируемых  Data
-    enum CacheDataType: String {
-        case images = "Images"
-    }
-
+final class CacheService: CacheServiceProtocol {
     // MARK: - Private constants
 
     private enum Constants {
@@ -25,11 +18,6 @@ final class CacheService {
 
     // MARK: - Public methods
 
-    /// Сохранение данных в кеш.
-    /// - Parameters:
-    ///   - fileURL: URL объекта. Используется для присвоения имени локальному файлу.
-    ///   - data: Экземпляр Data
-    ///   - cashDataType: Тип, который был источником Data. Влияет на директорию размещения файла.
     func saveDataToCache(fileURL: String, data: Data, cacheDataType: CacheDataType) {
         guard
             let path = getDirectoryPath(cacheDataType: cacheDataType),
@@ -40,11 +28,6 @@ final class CacheService {
         cacheStorageMap[String(fileName)] = data
     }
 
-    /// Загрузка данных из кеша.
-    /// - Parameters:
-    ///   - fileURL: URL объекта. Используется для поиска файла.
-    ///   - cashDataType: Тип, который был источником Data. Влияет на директорию размещения файла.
-    ///   - completion: Возвращает экземпляр класса Result<Data, Swift.Error>).
     func loadDataFromCache(
         fileURL: String,
         cacheDataType: CacheDataType
@@ -61,8 +44,7 @@ final class CacheService {
             let url = URL(fileURLWithPath: "\(directoryPath)/\(fileName)")
 
             do {
-                let data = try Data(contentsOf: url)
-                return data
+                return try Data(contentsOf: url)
             } catch {
                 return nil
             }
@@ -94,4 +76,9 @@ final class CacheService {
 
         return cacheDirectory.appendingPathComponent(cacheDataType.rawValue, isDirectory: true).path
     }
+}
+
+/// Типы данных конвертируемых  Data
+enum CacheDataType: String {
+    case images = "Images"
 }

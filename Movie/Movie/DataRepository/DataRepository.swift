@@ -5,14 +5,14 @@ import Foundation
 
 /// Воркер для работы с сетью экрана списка фильмов.
 final class DataRepository: DataRepositoryProtocol {
-    // MARK: - private properties
+    // MARK: - properties
 
-    var dataBaseService: DataBaseService?
-    var cacheService: CacheService?
+    private var dataBaseService: DataBaseServiceProtocol?
+    private var cacheService: CacheServiceProtocol?
 
     // MARK: - init
 
-    init(dataBaseService: DataBaseService, cacheService: CacheService) {
+    init(dataBaseService: DataBaseServiceProtocol, cacheService: CacheServiceProtocol) {
         self.dataBaseService = dataBaseService
         self.cacheService = cacheService
     }
@@ -23,10 +23,11 @@ final class DataRepository: DataRepositoryProtocol {
         if let imageData = cacheService?.loadDataFromCache(fileURL: posterPath, cacheDataType: .images) {
             completion(imageData)
         } else {
-            ImageService.getImage(
+            ImageService.fetchImage(
                 posterPath: posterPath,
                 size: size
-            ) { result in
+            ) { [weak self] result in
+                guard let self else { return }
                 switch result {
                 case let .succes(data):
                     self.cacheService?.saveDataToCache(fileURL: posterPath, data: data, cacheDataType: .images)
@@ -44,19 +45,17 @@ final class DataRepository: DataRepositoryProtocol {
             case .popularCinema:
                 return .getPopular
             case .newCinema:
-                return .getNew
+                return .topRated
             case .upcomingCinema:
                 return .getUpcoming
             }
         }()
 
-        NetworkService.fetchCinema(typeOfRequest: kindOfCinema) { result in
-            if
-                let cachedCinema = self.dataBaseService?.loadData(objectType: Result.self),
-                cachedCinema.count != 0
-            {
-                completion(CinemaLibrary(results: cachedCinema))
-            } else {
+        guard
+            let cachedCinema = dataBaseService?.loadData(objectType: Result.self),
+            cachedCinema.count != 0
+        else {
+            NetworkService.fetchCinema(typeOfRequest: kindOfCinema) { result in
                 switch result {
                 case let .succes(cinema):
                     guard let cinemaResponse = cinema as? CinemaInfoProtocol else { return }
@@ -66,6 +65,8 @@ final class DataRepository: DataRepositoryProtocol {
                     print("error: - \(cinema.localizedDescription)")
                 }
             }
+            return
         }
+        completion(CinemaLibrary(results: cachedCinema))
     }
 }

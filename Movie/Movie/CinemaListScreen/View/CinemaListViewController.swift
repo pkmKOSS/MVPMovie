@@ -175,6 +175,7 @@ final class CinemaListViewController: UIViewController, CinemaListViewProtocol {
     }
 
     private func fetchCinema() {
+        cinemaDescriptions.removeAll()
         presenter?.fetchCinema(typeOfCinema: .upcomingCinema)
     }
 

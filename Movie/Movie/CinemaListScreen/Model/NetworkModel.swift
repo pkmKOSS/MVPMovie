@@ -88,7 +88,7 @@ final class Result: Object, JSONCodable {
     }
 }
 
-/// asdf
+/// Библиотека кэшированных фильмов
 struct CinemaLibrary: CinemaInfoProtocol {
     var results: [Result]
 }

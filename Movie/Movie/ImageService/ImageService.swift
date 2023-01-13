@@ -8,7 +8,7 @@ import Foundation
 final class ImageService: ImageServiceProtocol {
     // MARK: - Public methods
 
-    static func getImage(
+    static func fetchImage(
         posterPath: String,
         size: SizeOfImages,
         complition: @escaping (GetImageResult) -> Void

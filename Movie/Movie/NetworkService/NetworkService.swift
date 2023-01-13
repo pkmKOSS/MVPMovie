@@ -44,14 +44,14 @@ extension NetworkService: NetworkServiceProtocol {
             }
         case .getPopular:
             sendRequest(
-                urlString: URLBaseStrings.getPopular.rawValue,
+                urlString: "\(URLBaseStrings.getPopular.rawValue)\(KeychainService.decodeAPIKey())&\(URLOptionalStrings.language.rawValue)&\(URLOptionalStrings.page.rawValue)",
                 model: InfoAboutPopularCinema.self
             ) { result in
                 complition(result)
             }
-        case .getNew:
+        case .topRated:
             sendRequest(
-                urlString: URLBaseStrings.getNew.rawValue,
+                urlString: "\(URLBaseStrings.topRated.rawValue)\(KeychainService.decodeAPIKey())&\(URLOptionalStrings.language.rawValue)&\(URLOptionalStrings.page.rawValue)",
                 model: InfoAboutCinema.self
             ) { result in
                 complition(result)
@@ -79,7 +79,7 @@ enum TypeOfCinemaRequset {
     /// Получить список популярных картин.
     case getPopular
     /// Получить список новинок.
-    case getNew
+    case topRated
 }
 
 /// Размеры загружаемых изображений.
@@ -94,7 +94,7 @@ enum URLBaseStrings: String {
         "https://api.themoviedb.org/3/movie/upcoming?api_key="
     case getPopular =
         "https://api.themoviedb.org/3/movie/popular?api_key="
-    case getNew = "https://api.themoviedb.org/3/movie/latest?api_key="
+    case topRated = "https://api.themoviedb.org/3/movie/top_rated?api_key="
 }
 
 /// Ссылки для запросов.

@@ -54,7 +54,6 @@ final class CinemaListViewController: UIViewController, CinemaListViewProtocol {
     func showCinema(cinema: CinemaInfoProtocol) {
         cinema.results.forEach { [weak self] result in
             guard let self = self else { return }
-            self.getImage(posterPath: result.posterPath, size: .w500)
             cinemaDescriptions.append(CinemaDescription(
                 title: result.title,
                 modelOverview: result.overview,
@@ -66,6 +65,10 @@ final class CinemaListViewController: UIViewController, CinemaListViewProtocol {
 
         DispatchQueue.main.async {
             self.cinemaListTableView.reloadData()
+            self.cinemaDescriptions.forEach { [weak self] cinema in
+                guard let self = self else { return }
+                self.fetchImage(posterPath: cinema.posterPath, size: .w500)
+            }
         }
     }
 
@@ -168,6 +171,7 @@ final class CinemaListViewController: UIViewController, CinemaListViewProtocol {
         showNewCinemaButton.backgroundColor = .systemYellow
         showNewCinemaButton.layer.cornerRadius = 5
         showNewCinemaButton.clipsToBounds = true
+        showNewCinemaButton.addTarget(self, action: #selector(fetchNewCinemaAction), for: .touchUpInside)
     }
 
     private func fetchCinema() {
@@ -181,7 +185,7 @@ final class CinemaListViewController: UIViewController, CinemaListViewProtocol {
         }
     }
 
-    private func getImage(
+    private func fetchImage(
         posterPath: String,
         size: SizeOfImages
     ) {
@@ -198,7 +202,7 @@ final class CinemaListViewController: UIViewController, CinemaListViewProtocol {
         presenter?.fetchCinema(typeOfCinema: .popularCinema)
     }
 
-    @objc private func getNewCinemaAction() {
+    @objc private func fetchNewCinemaAction() {
         presenter?.fetchCinema(typeOfCinema: .newCinema)
     }
 }

@@ -13,6 +13,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
+        KeychainService.saveAPIkey(key: "4e0be2c22f7268edffde97481d49064a")
         let cinemaListScreenBuilder = Builder()
         let viewController = cinemaListScreenBuilder.makeCinemaListModule()
         navController = UINavigationController(rootViewController: viewController)

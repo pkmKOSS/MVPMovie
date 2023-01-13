@@ -7,11 +7,13 @@ import UIKit
 final class Builder: AssemblyBuilderProtocol {
     func makeCinemaListModule() -> UIViewController {
         let presenter = CinemaListScreenPresenter()
-        let worker = DataRepository()
+        let dataBaseService = DataBaseService()
+        let cacheService = CacheService()
+        let dataRepository = DataRepository(dataBaseService: dataBaseService, cacheService: cacheService)
         let router = CinemaListRouter()
         let viewController = CinemaListViewController()
         viewController.presenter = presenter
-        presenter.dataRepository = worker
+        presenter.dataRepository = dataRepository
         presenter.router = router
         presenter.view = viewController
         return viewController

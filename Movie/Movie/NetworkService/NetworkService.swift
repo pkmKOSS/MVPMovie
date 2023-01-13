@@ -33,24 +33,25 @@ final class NetworkService {
 /// NetworkServiceProtocol method
 extension NetworkService: NetworkServiceProtocol {
     static func fetchCinema(typeOfRequest: TypeOfCinemaRequset, complition: @escaping (GetPostResult) -> Void) {
+        // swiftlint: disable all
         switch typeOfRequest {
         case .getUpcoming:
             sendRequest(
-                urlString: URLStrings.getUpcoming.rawValue,
+                urlString: "\(URLBaseStrings.getUpcoming.rawValue)\(KeychainService.decodeAPIKey())&\(URLOptionalStrings.language.rawValue)&\(URLOptionalStrings.page.rawValue)",
                 model: InfoAboutCinema.self
             ) { result in
                 complition(result)
             }
         case .getPopular:
             sendRequest(
-                urlString: URLStrings.getPopular.rawValue,
+                urlString: URLBaseStrings.getPopular.rawValue,
                 model: InfoAboutPopularCinema.self
             ) { result in
                 complition(result)
             }
         case .getNew:
             sendRequest(
-                urlString: URLStrings.getNew.rawValue,
+                urlString: URLBaseStrings.getNew.rawValue,
                 model: InfoAboutCinema.self
             ) { result in
                 complition(result)
@@ -88,10 +89,16 @@ enum SizeOfImages: String {
 }
 
 /// Ссылки для запросов.
-enum URLStrings: String {
+enum URLBaseStrings: String {
     case getUpcoming =
-        "https://api.themoviedb.org/3/movie/upcoming?api_key=4e0be2c22f7268edffde97481d49064a&language=ru&page-1"
+        "https://api.themoviedb.org/3/movie/upcoming?api_key="
     case getPopular =
-        "https://api.themoviedb.org/3/movie/popular?api_key=4e0be2c22f7268edffde97481d49064a&language=ru&page-2"
-    case getNew = "https://api.themoviedb.org/3/movie/latest?4e0be2c22f7268edffde97481d49064a&language=ru&page-3"
+        "https://api.themoviedb.org/3/movie/popular?api_key="
+    case getNew = "https://api.themoviedb.org/3/movie/latest?api_key="
+}
+
+/// Ссылки для запросов.
+enum URLOptionalStrings: String {
+    case language = "language=ru"
+    case page = "page-1"
 }

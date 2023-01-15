@@ -57,6 +57,17 @@ final class DataRepository: DataRepositoryProtocol {
             }
         }()
 
+        networkService.fetchCinema(typeOfRequest: kindOfCinema) { result in
+            switch result {
+            case let .succes(cinema):
+                guard let cinemaResponse = cinema as? CinemaInfoProtocol else { return }
+                self.dataBaseService?.saveData(objects: cinemaResponse.results)
+                completion(cinemaResponse)
+            case let .failure(cinema):
+                print("error: - \(cinema.localizedDescription)")
+            }
+        }
+
         guard
             let cachedCinema = dataBaseService?.loadData(objectType: Result.self),
             cachedCinema.count != 0

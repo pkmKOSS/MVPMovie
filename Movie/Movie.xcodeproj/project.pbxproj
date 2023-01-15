@@ -46,6 +46,7 @@
 		6BBE59E929709ED7008DF88B /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BBE59E829709ED7008DF88B /* KeychainService.swift */; };
 		6BBE59EB29714FA1008DF88B /* DataBaseServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BBE59EA29714FA1008DF88B /* DataBaseServiceProtocol.swift */; };
 		6BBE59ED29715091008DF88B /* CacheServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BBE59EC29715091008DF88B /* CacheServiceProtocol.swift */; };
+		6BBE59EF29743D71008DF88B /* KeychainServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BBE59EE29743D71008DF88B /* KeychainServiceProtocol.swift */; };
 		6BF3413429098C40001448A2 /* CinemaDescriptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BF3413329098C40001448A2 /* CinemaDescriptionViewController.swift */; };
 		6BF3413729098FA4001448A2 /* PosterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BF3413629098FA4001448A2 /* PosterTableViewCell.swift */; };
 		6BF34139290995F9001448A2 /* ButtonsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BF34138290995F9001448A2 /* ButtonsTableViewCell.swift */; };
@@ -93,6 +94,7 @@
 		6BBE59E829709ED7008DF88B /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
 		6BBE59EA29714FA1008DF88B /* DataBaseServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseServiceProtocol.swift; sourceTree = "<group>"; };
 		6BBE59EC29715091008DF88B /* CacheServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheServiceProtocol.swift; sourceTree = "<group>"; };
+		6BBE59EE29743D71008DF88B /* KeychainServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainServiceProtocol.swift; sourceTree = "<group>"; };
 		6BF3413329098C40001448A2 /* CinemaDescriptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CinemaDescriptionViewController.swift; sourceTree = "<group>"; };
 		6BF3413629098FA4001448A2 /* PosterTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PosterTableViewCell.swift; sourceTree = "<group>"; };
 		6BF34138290995F9001448A2 /* ButtonsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonsTableViewCell.swift; sourceTree = "<group>"; };
@@ -333,6 +335,7 @@
 			isa = PBXGroup;
 			children = (
 				6BBE59E829709ED7008DF88B /* KeychainService.swift */,
+				6BBE59EE29743D71008DF88B /* KeychainServiceProtocol.swift */,
 			);
 			path = KeychainService;
 			sourceTree = "<group>";
@@ -521,6 +524,7 @@
 				6B2EC32229086DA100DADFD1 /* NSConstraint+setPriorityFunc.swift in Sources */,
 				6BF34139290995F9001448A2 /* ButtonsTableViewCell.swift in Sources */,
 				6BF5F48A290B8B0B00A8588A /* Array+safelyAccesToElement.swift in Sources */,
+				6BBE59EF29743D71008DF88B /* KeychainServiceProtocol.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

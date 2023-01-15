@@ -9,5 +9,5 @@ protocol NetworkServiceProtocol {
     /// - Parameters:
     ///   - typeOfRequest: Тип запроса в зависимости от конкретных характеристик кинофильмов.
     ///   - handler: Возвращает массив кинофильмов или ошибку.
-    static func fetchCinema(typeOfRequest: TypeOfCinemaRequset, complition: @escaping (GetPostResult) -> Void)
+    func fetchCinema(typeOfRequest: TypeOfCinemaRequset, complition: @escaping (GetPostResult) -> Void)
 }

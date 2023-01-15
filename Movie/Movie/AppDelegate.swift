@@ -4,7 +4,7 @@
 import UIKit
 
 @main
-// Сгенерированный AppDelegate
+// AppDelegate
 class AppDelegate: UIResponder, UIApplicationDelegate {
     // MARK: - Private constant
 
@@ -21,12 +21,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
-        KeychainService.saveAPIkey(key: Constants.apiKey)
+        makeStartScreen()
+        return true
+    }
+
+    private func makeStartScreen() {
+        let keychain = KeychainService()
+        keychain.saveAPIkey(key: Constants.apiKey)
         let cinemaListScreenBuilder = Builder()
         let viewController = cinemaListScreenBuilder.makeCinemaListModule()
         navController = UINavigationController(rootViewController: viewController)
         window?.rootViewController = navController
         window?.makeKeyAndVisible()
-        return true
     }
 }

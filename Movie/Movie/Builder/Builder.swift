@@ -9,7 +9,13 @@ final class Builder: AssemblyBuilderProtocol {
         let presenter = CinemaListScreenPresenter()
         let dataBaseService = DataBaseService()
         let cacheService = CacheService()
-        let dataRepository = DataRepository(dataBaseService: dataBaseService, cacheService: cacheService)
+        let keychainService = KeychainService()
+        let networkService = NetworkService(keychainService: keychainService)
+        let dataRepository = DataRepository(
+            dataBaseService: dataBaseService,
+            cacheService: cacheService,
+            networkService: networkService
+        )
         let router = CinemaListRouter()
         let viewController = CinemaListViewController()
         viewController.presenter = presenter

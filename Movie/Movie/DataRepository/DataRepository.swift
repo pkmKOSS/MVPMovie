@@ -3,18 +3,24 @@
 
 import Foundation
 
-/// Воркер для работы с сетью экрана списка фильмов.
+/// Репозиторий для работы с сетью экрана списка фильмов.
 final class DataRepository: DataRepositoryProtocol {
     // MARK: - properties
 
     private var dataBaseService: DataBaseServiceProtocol?
     private var cacheService: CacheServiceProtocol?
+    private var networkService: NetworkServiceProtocol
 
     // MARK: - init
 
-    init(dataBaseService: DataBaseServiceProtocol, cacheService: CacheServiceProtocol) {
+    init(
+        dataBaseService: DataBaseServiceProtocol,
+        cacheService: CacheServiceProtocol,
+        networkService: NetworkServiceProtocol
+    ) {
         self.dataBaseService = dataBaseService
         self.cacheService = cacheService
+        self.networkService = networkService
     }
 
     // MARK: - public methods
@@ -55,7 +61,7 @@ final class DataRepository: DataRepositoryProtocol {
             let cachedCinema = dataBaseService?.loadData(objectType: Result.self),
             cachedCinema.count != 0
         else {
-            NetworkService.fetchCinema(typeOfRequest: kindOfCinema) { result in
+            networkService.fetchCinema(typeOfRequest: kindOfCinema) { result in
                 switch result {
                 case let .succes(cinema):
                     guard let cinemaResponse = cinema as? CinemaInfoProtocol else { return }

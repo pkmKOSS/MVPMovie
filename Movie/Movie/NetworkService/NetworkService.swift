@@ -12,7 +12,17 @@ protocol JSONCodable: Codable {
 
 /// Менеджер для работы с сетью.
 final class NetworkService {
-    private static func sendRequest<T: JSONCodable>(
+    // MARK: - public properties
+
+    var keychainService: KeychainServiceProtocol
+
+    // MARK: - Init
+
+    init(keychainService: KeychainServiceProtocol) {
+        self.keychainService = keychainService
+    }
+
+    private func sendRequest<T: JSONCodable>(
         urlString: String,
         model: T.Type,
         complition: @escaping (GetPostResult) -> Void
@@ -32,26 +42,26 @@ final class NetworkService {
 
 /// NetworkServiceProtocol method
 extension NetworkService: NetworkServiceProtocol {
-    static func fetchCinema(typeOfRequest: TypeOfCinemaRequset, complition: @escaping (GetPostResult) -> Void) {
+    func fetchCinema(typeOfRequest: TypeOfCinemaRequset, complition: @escaping (GetPostResult) -> Void) {
         // swiftlint: disable all
         switch typeOfRequest {
         case .getUpcoming:
             sendRequest(
-                urlString: "\(URLBaseStrings.getUpcoming.rawValue)\(KeychainService.decodeAPIKey())&\(URLOptionalStrings.language.rawValue)&\(URLOptionalStrings.page.rawValue)",
+                urlString: "\(URLBaseStrings.getUpcoming.rawValue)\(keychainService.decodeAPIKey())&\(URLOptionalStrings.language.rawValue)&\(URLOptionalStrings.page.rawValue)",
                 model: InfoAboutCinema.self
             ) { result in
                 complition(result)
             }
         case .getPopular:
             sendRequest(
-                urlString: "\(URLBaseStrings.getPopular.rawValue)\(KeychainService.decodeAPIKey())&\(URLOptionalStrings.language.rawValue)&\(URLOptionalStrings.page.rawValue)",
+                urlString: "\(URLBaseStrings.getPopular.rawValue)\(keychainService.decodeAPIKey())&\(URLOptionalStrings.language.rawValue)&\(URLOptionalStrings.page.rawValue)",
                 model: InfoAboutPopularCinema.self
             ) { result in
                 complition(result)
             }
         case .topRated:
             sendRequest(
-                urlString: "\(URLBaseStrings.topRated.rawValue)\(KeychainService.decodeAPIKey())&\(URLOptionalStrings.language.rawValue)&\(URLOptionalStrings.page.rawValue)",
+                urlString: "\(URLBaseStrings.topRated.rawValue)\(keychainService.decodeAPIKey())&\(URLOptionalStrings.language.rawValue)&\(URLOptionalStrings.page.rawValue)",
                 model: InfoAboutCinema.self
             ) { result in
                 complition(result)

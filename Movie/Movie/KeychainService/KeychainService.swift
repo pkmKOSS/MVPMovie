@@ -4,10 +4,10 @@
 import Foundation
 
 /// Сервис для сохранения зашифрованной информации.
-final class KeychainService {
+final class KeychainService: KeychainServiceProtocol {
     // MARK: - Public method
 
-    static func updateAPI(key: String) {
+    func updateAPI(key: String) {
         let query = [
             kSecClass: kSecClassGenericPassword,
         ] as CFDictionary
@@ -19,7 +19,7 @@ final class KeychainService {
         SecItemUpdate(query, updateFields)
     }
 
-    static func saveAPIkey(key: String) {
+    func saveAPIkey(key: String) {
         let keyChainItemQuery = [
             kSecValueData: key.data(using: .utf8),
             kSecClass: kSecClassGenericPassword
@@ -28,7 +28,7 @@ final class KeychainService {
         SecItemAdd(keyChainItemQuery, nil)
     }
 
-    static func decodeAPIKey() -> String {
+    func decodeAPIKey() -> String {
         let keychainItem = [
             kSecClass: kSecClassGenericPassword,
             kSecReturnAttributes: true,

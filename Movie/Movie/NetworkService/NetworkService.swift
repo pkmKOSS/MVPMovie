@@ -12,7 +12,17 @@ protocol JSONCodable: Codable {
 
 /// Менеджер для работы с сетью.
 final class NetworkService {
-    private static func sendRequest<T: JSONCodable>(
+    // MARK: - public properties
+
+    var keychainService: KeychainServiceProtocol
+
+    // MARK: - Init
+
+    init(keychainService: KeychainServiceProtocol) {
+        self.keychainService = keychainService
+    }
+
+    private func sendRequest<T: JSONCodable>(
         urlString: String,
         model: T.Type,
         complition: @escaping (GetPostResult) -> Void
@@ -32,25 +42,26 @@ final class NetworkService {
 
 /// NetworkServiceProtocol method
 extension NetworkService: NetworkServiceProtocol {
-    static func fetchCinema(typeOfRequest: TypeOfCinemaRequset, complition: @escaping (GetPostResult) -> Void) {
+    func fetchCinema(typeOfRequest: TypeOfCinemaRequset, complition: @escaping (GetPostResult) -> Void) {
+        // swiftlint: disable all
         switch typeOfRequest {
         case .getUpcoming:
             sendRequest(
-                urlString: URLStrings.getUpcoming.rawValue,
+                urlString: "\(URLBaseStrings.getUpcoming.rawValue)\(keychainService.decodeAPIKey())&\(URLOptionalStrings.language.rawValue)&\(URLOptionalStrings.page.rawValue)",
                 model: InfoAboutCinema.self
             ) { result in
                 complition(result)
             }
         case .getPopular:
             sendRequest(
-                urlString: URLStrings.getPopular.rawValue,
+                urlString: "\(URLBaseStrings.getPopular.rawValue)\(keychainService.decodeAPIKey())&\(URLOptionalStrings.language.rawValue)&\(URLOptionalStrings.page.rawValue)",
                 model: InfoAboutPopularCinema.self
             ) { result in
                 complition(result)
             }
-        case .getNew:
+        case .topRated:
             sendRequest(
-                urlString: URLStrings.getNew.rawValue,
+                urlString: "\(URLBaseStrings.topRated.rawValue)\(keychainService.decodeAPIKey())&\(URLOptionalStrings.language.rawValue)&\(URLOptionalStrings.page.rawValue)",
                 model: InfoAboutCinema.self
             ) { result in
                 complition(result)
@@ -78,7 +89,7 @@ enum TypeOfCinemaRequset {
     /// Получить список популярных картин.
     case getPopular
     /// Получить список новинок.
-    case getNew
+    case topRated
 }
 
 /// Размеры загружаемых изображений.
@@ -88,10 +99,16 @@ enum SizeOfImages: String {
 }
 
 /// Ссылки для запросов.
-enum URLStrings: String {
+enum URLBaseStrings: String {
     case getUpcoming =
-        "https://api.themoviedb.org/3/movie/upcoming?api_key=4e0be2c22f7268edffde97481d49064a&language=ru&page-1"
+        "https://api.themoviedb.org/3/movie/upcoming?api_key="
     case getPopular =
-        "https://api.themoviedb.org/3/movie/popular?api_key=4e0be2c22f7268edffde97481d49064a&language=ru&page-2"
-    case getNew = "https://api.themoviedb.org/3/movie/latest?4e0be2c22f7268edffde97481d49064a&language=ru&page-3"
+        "https://api.themoviedb.org/3/movie/popular?api_key="
+    case topRated = "https://api.themoviedb.org/3/movie/top_rated?api_key="
+}
+
+/// Ссылки для запросов.
+enum URLOptionalStrings: String {
+    case language = "language=ru"
+    case page = "page-1"
 }

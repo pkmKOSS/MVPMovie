@@ -4,4 +4,7 @@
 import Foundation
 
 /// Интерфейс представления экрана с описанием фильма
-protocol CinemaDescriptionViewProtocol: AnyObject {}
+protocol CinemaDescriptionViewProtocol: AnyObject {
+    func sayHellow()
+    func hellow()
+}

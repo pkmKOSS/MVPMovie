@@ -5,42 +5,56 @@
 import SwiftyJSON
 import XCTest
 
-/// asdasd
-class MockCinemaListView: CinemaListViewProtocol {
-    func showCinema(cinema: CinemaInfoProtocol) {}
+/// Тесты презентера экрана со списком фильмов
+final class CinemaListPresenterTest: XCTestCase {
 
-    func showCinemaPoster(imageData: Data, posterPath: String) {}
-}
+    // MARK: - private constants
 
-/// asd
-class MockDataRepository: DataRepositoryProtocol {
-    let cinemas: InfoAboutCinema?
-    let imageData: Data
-
-    init(cinemas: InfoAboutCinema? = nil, imageData: Data) {
-        self.imageData = imageData
-        self.cinemas = cinemas
+    private enum Constants {
+        static let posterPathName = "posterPath"
+        static let cinemaResponseName = "CinemaResponse"
+        static let jsonTypeName = "json"
+        static let defaultStringName = ""
     }
 
-    func fetchCinema(typeOfCinema: TypeOfCinema, completion: @escaping (CinemaInfoProtocol) -> ()) {}
+    // MARK: - private properties
 
-    func fetchImage(
-        posterPath: String,
-        size: SizeOfImages,
-        completion: @escaping (Data) -> ()
-    ) {}
-}
+    private var view: CinemaListViewProtocol!
+    private var presenter: CinemaListPresenterProtocol!
+    private var dataBaseService: DataBaseServiceProtocol!
+    private var dataRepository: DataRepositoryProtocol!
+    private var keychainService: KeychainServiceProtocol!
+    private var networkService: NetworkServiceProtocol!
+    private var imageService: ImageServiceProtocol!
+    private var router: CinemaListRouterProtocol!
+    private var cinema: CinemaInfoProtocol!
+    private var imageData: Data?
+    private var jsonURL: String!
+    private var cinemas: InfoAboutCinema?
 
-/// asd
-class CinemaListPresenterTest: XCTestCase {
-    var view: CinemaListViewProtocol?
-    var presenter: CinemaListPresenterProtocol?
-    var dataRepository: MockDataRepository?
-    var router: CinemaListRouterProtocol?
-    var cinema: CinemaInfoProtocol?
-    var imageData: Data?
+    // MARK: - public methods
 
-    override func setUpWithError() throws {}
+    override func setUpWithError() throws {
+        keychainService = MockKeychainService()
+        imageService = MockImageServiceTests(posterPath: Constants.posterPathName)
+        dataBaseService = MockDataBaseService()
+        networkService = MockNetworkService(keychainService: keychainService)
+        jsonURL = Bundle.main.path(forResource: Constants.cinemaResponseName, ofType: Constants.jsonTypeName) ?? Constants.defaultStringName
+        do {
+            let fileURL = URL(fileURLWithPath: jsonURL)
+            let data = try Data(contentsOf: fileURL)
+            let json = try JSON(data: data)
+            let cinema = InfoAboutCinema(json: json)
+            cinemas = cinema
+        }
+        dataRepository = MockDataRepository(
+            networkService: networkService,
+            dataBaseService: dataBaseService,
+            imageService: imageService
+        )
+        router = MockCinemaListRouter()
+        view = MockCinemaListView()
+    }
 
     override func tearDown() {
         view = nil
@@ -51,29 +65,28 @@ class CinemaListPresenterTest: XCTestCase {
     }
 
     func testFetchCinema() throws {
-        guard let jsonURL = Bundle.main.path(forResource: "CinemaResponse", ofType: "json") else { return }
-
-        var cinemas: InfoAboutCinema?
-
-        do {
-            let fileURL = URL(fileURLWithPath: jsonURL)
-            let data = try Data(contentsOf: fileURL)
-            let json = try JSON(data: data)
-            let cinema = InfoAboutCinema(json: json)
-            cinemas = cinema
-        } catch {
-            print("error")
-        }
-
-        view = CinemaListViewController()
-        dataRepository = MockDataRepository(cinemas: cinemas, imageData: Data())
-        router = CinemaListRouter()
-        presenter = CinemaListScreenPresenter(dataRepository: dataRepository, view: view, router: router)
-
-        dataRepository?.fetchCinema(typeOfCinema: .upcomingCinema) { result in
+        dataRepository.fetchCinema(typeOfCinema: .newCinema) { result in
             self.cinema = result
+            XCTAssertNotNil(self.cinemas)
         }
 
-        XCTAssertNotNil(cinemas)
+        dataRepository.fetchCinema(typeOfCinema: .upcomingCinema) { result in
+            self.cinema = result
+            XCTAssertNotNil(self.cinemas)
+        }
+
+        dataRepository.fetchCinema(typeOfCinema: .popularCinema) { result in
+            self.cinema = result
+            XCTAssertNotNil(self.cinemas)
+        }
+    }
+
+    func testFetchImage() throws {
+        var imageData: Data?
+
+        dataRepository?.fetchImage(posterPath: "bar", size: .w500, completion: { data in
+            imageData = data
+            XCTAssertNotNil(imageData)
+        })
     }
 }

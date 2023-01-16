@@ -34,7 +34,7 @@
             parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "6BBE59F829745B16008DF88B"
+               BlueprintIdentifier = "6B5433B92974AFD80048EE31"
                BuildableName = "MovieTests.xctest"
                BlueprintName = "MovieTests"
                ReferencedContainer = "container:Movie.xcodeproj">
@@ -48,6 +48,28 @@
                BlueprintIdentifier = "6B54338A29748C910048EE31"
                BuildableName = "CinemaListPresenterTest.xctest"
                BlueprintName = "CinemaListPresenterTest"
+               ReferencedContainer = "container:Movie.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "6B5433AC2974AF450048EE31"
+               BuildableName = "BuilderTests.xctest"
+               BlueprintName = "BuilderTests"
+               ReferencedContainer = "container:Movie.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "6BF259332975574100893ACE"
+               BuildableName = "MovieUITests.xctest"
+               BlueprintName = "MovieUITests"
                ReferencedContainer = "container:Movie.xcodeproj">
             </BuildableReference>
          </TestableReference>

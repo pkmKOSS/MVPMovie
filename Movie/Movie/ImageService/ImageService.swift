@@ -8,18 +8,25 @@ import Foundation
 final class ImageService: ImageServiceProtocol {
     // MARK: - Public methods
 
-    static func fetchImage(
+    func fetchImage(
         posterPath: String,
         size: SizeOfImages,
         complition: @escaping (GetImageResult) -> Void
     ) {
         let urlString = "\(StringConstants.imageBaseUrl)\(size.rawValue)\(posterPath)"
         guard let url = URL(string: urlString) else { return }
+
         AF.request(url).response { response in
             guard
                 let data = response.data
-            else { return }
+            else {
+                guard let error = response.error else { return }
+                complition(GetImageResult.failure(cinema: error))
+                return
+            }
+
             let dataResult = GetImageResult.succes(cinema: data)
+
             complition(dataResult)
         }
     }

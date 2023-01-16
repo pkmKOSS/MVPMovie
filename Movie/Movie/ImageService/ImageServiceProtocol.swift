@@ -10,7 +10,7 @@ protocol ImageServiceProtocol {
     ///   - posterPath: адрес изображение. Получается как поле Result
     ///   - size: Размер изображения.
     ///   - complition: Замыкание.
-    static func fetchImage(
+    func fetchImage(
         posterPath: String,
         size: SizeOfImages,
         complition: @escaping (GetImageResult) -> Void

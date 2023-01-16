@@ -5,16 +5,20 @@ import UIKit
 
 /// Создает экран со списком фильмов.
 final class Builder: AssemblyBuilderProtocol {
+    // MARK: - public methods
+
     func makeCinemaListModule() -> UIViewController {
         let presenter = CinemaListScreenPresenter()
         let dataBaseService = DataBaseService()
         let cacheService = CacheService()
         let keychainService = KeychainService()
+        let imageService = ImageService()
         let networkService = NetworkService(keychainService: keychainService)
         let dataRepository = DataRepository(
             dataBaseService: dataBaseService,
             cacheService: cacheService,
-            networkService: networkService
+            networkService: networkService,
+            imageService: imageService
         )
         let router = CinemaListRouter()
         let viewController = CinemaListViewController()
@@ -30,10 +34,14 @@ final class Builder: AssemblyBuilderProtocol {
         posterData: Data
     ) -> UIViewController {
         let router = CinemaDescriptionRouter()
-        let viewController = CinemaDescriptionViewController(helper: cinemaDescription, posterData: posterData)
-        let presenter = CinemaDescriptionPresenter(view: viewController, router: router)
+        let presenter = CinemaDescriptionPresenter(router: router)
+        let viewController = CinemaDescriptionViewController(
+            helper: cinemaDescription,
+            posterData: posterData,
+            presenter: presenter
+        )
         presenter.router = router
-        viewController.presenter = presenter
+        presenter.view = viewController
         return viewController
     }
 }

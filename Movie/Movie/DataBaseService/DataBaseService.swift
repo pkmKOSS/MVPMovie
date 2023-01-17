@@ -6,7 +6,7 @@ import Realm
 import RealmSwift
 
 /// Сервис для локального хранения данных.
-struct DataBaseService {
+struct DataBaseService: DataBaseServiceProtocol {
     // MARK: - Public Methods
 
     func observeChanges<T: Object>(

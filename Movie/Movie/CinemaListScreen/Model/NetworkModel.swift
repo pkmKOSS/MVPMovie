@@ -2,6 +2,7 @@
 // Copyright © RoadMap. All rights reserved.
 
 import Foundation
+import RealmSwift
 import SwiftyJSON
 
 /// Сведения о грядущих новинках.
@@ -43,34 +44,32 @@ struct Dates: Codable {
 }
 
 /// Сведения о конкретном фильме.
-struct Result: Codable {
+final class Result: Object, JSONCodable {
     /// Любительский ли фильм
-    let adult: Bool
+    @objc dynamic var adult: Bool
     /// Адрес фонового изображения
-    let backdropPath: String
-    /// Массив с ID жанров
-    let genreIDS: [Int]
+    @objc dynamic var backdropPath: String
     /// ID фильма.
-    let id: Int
+    @objc dynamic var id: Int
     /// Оригинальный язык, оригинальное название, оригинально описание
-    let originalLanguage, originalTitle, overview: String
+    @objc dynamic var originalLanguage, originalTitle, overview: String
     /// Популярность
-    let popularity: Double
+    @objc dynamic var popularity: Double
     /// Адрес изображения постера, дата релиза, название
-    let posterPath, releaseDate, title: String
+    @objc dynamic var posterPath, releaseDate, title: String
     /// Есть ли трейлер
-    let video: Bool
+    @objc dynamic var video: Bool
     /// Средняя оценка
-    let voteAverage: Double
+    @objc dynamic var voteAverage: Double
     /// Количество оценок
-    let voteCount: Int
+    @objc dynamic var voteCount: Int
 
-    init(
+    convenience init(
         json: JSON
     ) {
+        self.init()
         adult = json["adult"].boolValue
         backdropPath = json["backdropPath"].stringValue
-        genreIDS = []
         id = json["id"].intValue
         originalLanguage = json["originalLanguage"].stringValue
         originalTitle = json["originalTitle"].stringValue
@@ -83,4 +82,13 @@ struct Result: Codable {
         voteAverage = json["vote_average"].doubleValue
         voteCount = json["vote_count"].intValue
     }
+
+    override class func primaryKey() -> String? {
+        "id"
+    }
+}
+
+/// Библиотека кэшированных фильмов
+struct CinemaLibrary: CinemaInfoProtocol {
+    var results: [Result]
 }

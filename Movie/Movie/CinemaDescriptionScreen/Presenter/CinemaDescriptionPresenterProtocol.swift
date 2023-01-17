@@ -4,4 +4,6 @@
 import Foundation
 
 /// Интерфейс презентера экрана описания фильма.
-protocol CinemaDescriptionPresenterProtocol {}
+protocol CinemaDescriptionPresenterProtocol {
+    func reloadUI()
+}

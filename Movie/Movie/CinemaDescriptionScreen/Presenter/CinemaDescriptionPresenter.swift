@@ -10,8 +10,15 @@ final class CinemaDescriptionPresenter: CinemaDescriptionPresenterProtocol {
     weak var view: CinemaDescriptionViewProtocol?
     weak var router: CinemaDescriptionRouterProtocol?
 
-    init(view: CinemaDescriptionViewProtocol, router: CinemaDescriptionRouterProtocol) {
-        self.view = view
+    // MARK: - Init
+
+    init(router: CinemaDescriptionRouterProtocol) {
         self.router = router
+    }
+
+    // MARK: - public methods
+
+    func reloadUI() {
+        view?.updateModuleUI()
     }
 }

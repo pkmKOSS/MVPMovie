@@ -45,13 +45,4 @@ final class KeychainService: KeychainServiceProtocol {
         else { return "" }
         return String(decoding: passwordData, as: UTF8.self)
     }
-
-    func deleteAPIKey(key: String) {
-        let keyChainItemQuery = [
-            kSecValueData: key.data(using: .utf8),
-            kSecClass: kSecClassGenericPassword
-        ] as CFDictionary
-
-        SecItemDelete(keyChainItemQuery)
-    }
 }

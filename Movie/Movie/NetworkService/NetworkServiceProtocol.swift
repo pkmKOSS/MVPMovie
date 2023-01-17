@@ -10,10 +10,4 @@ protocol NetworkServiceProtocol {
     ///   - typeOfRequest: Тип запроса в зависимости от конкретных характеристик кинофильмов.
     ///   - handler: Возвращает массив кинофильмов или ошибку.
     func fetchCinema(typeOfRequest: TypeOfCinemaRequset, complition: @escaping (GetPostResult) -> Void)
-
-    func sendRequest<T: JSONCodable>(
-        urlString: String,
-        model: T.Type,
-        complition: @escaping (GetPostResult) -> Void
-    )
 }

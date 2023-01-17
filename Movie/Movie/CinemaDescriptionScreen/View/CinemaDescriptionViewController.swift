@@ -23,7 +23,7 @@ final class CinemaDescriptionViewController: UIViewController {
 
     // MARK: - Public properties
 
-    var presenter: CinemaDescriptionPresenterProtocol
+    var presenter: CinemaDescriptionPresenterProtocol!
 
     // MARK: - Private properties
 
@@ -44,10 +44,9 @@ final class CinemaDescriptionViewController: UIViewController {
 
     // MARK: Init
 
-    init(helper: CinemaDescription, posterData: Data, presenter: CinemaDescriptionPresenterProtocol) {
+    init(helper: CinemaDescription, posterData: Data) {
         descriptionHelper = helper
         imageData = posterData
-        self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -160,13 +159,4 @@ extension CinemaDescriptionViewController: UITableViewDataSource, UITableViewDel
     }
 }
 
-extension CinemaDescriptionViewController: CinemaDescriptionViewProtocol {
-    func sayHellow() {
-        configureScene()
-        tableView.reloadData()
-    }
-
-    func hellow() {
-        presenter.sayHellow()
-    }
-}
+extension CinemaDescriptionViewController: CinemaDescriptionViewProtocol {}

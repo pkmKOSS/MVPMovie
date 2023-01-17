@@ -4,9 +4,8 @@
 import Foundation
 
 /// Интерфейс для работы с зашифрованной информацией.
-protocol KeychainServiceProtocol: AnyObject {
+protocol KeychainServiceProtocol {
     func updateAPI(key: String)
     func saveAPIkey(key: String)
     func decodeAPIKey() -> String
-    func deleteAPIKey(key: String)
 }

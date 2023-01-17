@@ -4,6 +4,4 @@
 import Foundation
 
 /// Интерфейс презентера экрана описания фильма.
-protocol CinemaDescriptionPresenterProtocol {
-    func sayHellow()
-}
+protocol CinemaDescriptionPresenterProtocol {}

@@ -7,6 +7,24 @@ import RealmSwift
 
 /// Сервис для локального хранения данных.
 struct DataBaseService: DataBaseServiceProtocol {
+    // MARK: - Public Methods
+
+    func observeChanges<T: Object>(
+        type: T.Type,
+        notToken: inout RLMNotificationToken,
+        completion: @escaping (RealmCollectionChange<Results<T>>) -> ()
+    ) {
+        do {
+            let realm = try Realm()
+            let objects = realm.objects(type)
+            notToken = objects.observe { changes in
+                completion(changes)
+            }
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+
     func saveData<T: Object>(objects: [T]) {
         do {
             let configuration = Realm.Configuration(deleteRealmIfMigrationNeeded: false)

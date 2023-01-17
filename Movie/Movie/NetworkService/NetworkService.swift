@@ -22,20 +22,19 @@ final class NetworkService {
         self.keychainService = keychainService
     }
 
-    func sendRequest<T: JSONCodable>(
+    private func sendRequest<T: JSONCodable>(
         urlString: String,
         model: T.Type,
         complition: @escaping (GetPostResult) -> Void
     ) {
-        if let url = URL(string: urlString) {
-            AF.request(url).responseJSON { response in
-                switch response.result {
-                case let .success(value):
-                    let json = JSON(value)
-                    complition(GetPostResult.succes(cinema: model.init(json: json)))
-                case let .failure(error):
-                    complition(GetPostResult.failure(cinema: error))
-                }
+        guard let url = URL(string: urlString) else { return }
+        AF.request(url).responseJSON { response in
+            switch response.result {
+            case let .success(value):
+                let json = JSON(value)
+                complition(GetPostResult.succes(cinema: model.init(json: json)))
+            case let .failure(error):
+                complition(GetPostResult.failure(cinema: error))
             }
         }
     }
@@ -80,7 +79,7 @@ enum GetPostResult {
 /// Результат обращения к веб сервису с кинофильмами.
 enum GetImageResult {
     case succes(cinema: Data)
-    case failure(cinema: AFError)
+    case failure(cinema: Error)
 }
 
 /// Типы запроса в зависимости от получаемого контента.

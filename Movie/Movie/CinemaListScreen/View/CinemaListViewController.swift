@@ -126,7 +126,6 @@ final class CinemaListViewController: UIViewController, CinemaListViewProtocol {
         showUpcomingCinemaButton.backgroundColor = .systemYellow
         showUpcomingCinemaButton.layer.cornerRadius = 5
         showUpcomingCinemaButton.clipsToBounds = true
-        showUpcomingCinemaButton.accessibilityIdentifier = "Upcoming"
         showUpcomingCinemaButton.addTarget(self, action: #selector(getUpcomingCinemaAction), for: .touchUpInside)
     }
 
@@ -144,7 +143,6 @@ final class CinemaListViewController: UIViewController, CinemaListViewProtocol {
         showPopularCinemaButton.backgroundColor = .systemYellow
         showPopularCinemaButton.layer.cornerRadius = 5
         showPopularCinemaButton.clipsToBounds = true
-        showPopularCinemaButton.accessibilityIdentifier = "Popular"
         showPopularCinemaButton.addTarget(self, action: #selector(getPopularCinemaAction), for: .touchUpInside)
     }
 
@@ -173,7 +171,6 @@ final class CinemaListViewController: UIViewController, CinemaListViewProtocol {
         showNewCinemaButton.backgroundColor = .systemYellow
         showNewCinemaButton.layer.cornerRadius = 5
         showNewCinemaButton.clipsToBounds = true
-        showNewCinemaButton.accessibilityIdentifier = "New"
         showNewCinemaButton.addTarget(self, action: #selector(fetchNewCinemaAction), for: .touchUpInside)
     }
 

@@ -7,14 +7,11 @@ import Foundation
 final class CinemaDescriptionPresenter: CinemaDescriptionPresenterProtocol {
     // MARK: Public properties
 
-    weak var view: CinemaDescriptionViewProtocol!
+    weak var view: CinemaDescriptionViewProtocol?
     weak var router: CinemaDescriptionRouterProtocol?
 
-    init(router: CinemaDescriptionRouterProtocol) {
+    init(view: CinemaDescriptionViewProtocol, router: CinemaDescriptionRouterProtocol) {
+        self.view = view
         self.router = router
-    }
-
-    func sayHellow() {
-        view?.sayHellow()
     }
 }

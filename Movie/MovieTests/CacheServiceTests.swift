@@ -2,9 +2,6 @@
 // Copyright © RoadMap. All rights reserved.
 
 //
-//  CacheServiceTests.swift
-//  MovieTests
-//
 //  Created by Григоренко Александр Игоревич on 16.01.2023.
 //
 @testable import Movie
@@ -15,6 +12,8 @@ final class CacheServiceTests: XCTestCase {
     // MARK: - private properties
 
     private var cacheService: CacheServiceProtocol!
+
+    // MARK: - public methods
 
     override func setUpWithError() throws {
         cacheService = CacheService()

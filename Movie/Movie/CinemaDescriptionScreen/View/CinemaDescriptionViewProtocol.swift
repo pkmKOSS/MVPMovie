@@ -5,6 +5,6 @@ import Foundation
 
 /// Интерфейс представления экрана с описанием фильма
 protocol CinemaDescriptionViewProtocol: AnyObject {
-    func sayHellow()
-    func hellow()
+    func updateModuleUI()
+    func reloadTaviewData()
 }

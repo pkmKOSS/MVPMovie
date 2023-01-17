@@ -6,7 +6,6 @@ import XCTest
 
 /// Тесты репозитория данных
 final class DataRepositoryTests: XCTestCase {
-
     // MARK: - private constants
 
     private enum Constants {

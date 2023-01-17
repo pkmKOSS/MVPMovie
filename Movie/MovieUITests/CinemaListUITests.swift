@@ -15,7 +15,7 @@ final class CinemaListUITests: XCTestCase {
         static let upcoming = "Upcoming"
     }
 
-    // MARK: - Public Properties
+    // MARK: - Public methods
 
     override func setUpWithError() throws {
         continueAfterFailure = false

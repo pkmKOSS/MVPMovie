@@ -14,6 +14,8 @@ final class DataBaseServiceTests: XCTestCase {
     private var dataBaseService: DataBaseServiceProtocol!
     private var jsonURL: String!
 
+    // MARK: - public methods
+
     override func setUpWithError() throws {
         dataBaseService = DataBaseService()
         jsonURL = Bundle.main.path(forResource: "CinemaResponse", ofType: "json") ?? ""

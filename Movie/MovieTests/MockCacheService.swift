@@ -6,7 +6,6 @@ import Foundation
 
 /// Мок сервиса кеширования.
 final class MockCacheService: CacheServiceProtocol {
-
     // MARK: - private properties
 
     var data: Data?

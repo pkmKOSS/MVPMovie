@@ -6,7 +6,6 @@ import Foundation
 
 /// Мок роутера экрана со списком фильмов.
 final class MockCinemaListRouter: CinemaListRouterProtocol {
-
     // MARK: - Init
 
     init() {}

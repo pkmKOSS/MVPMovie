@@ -11,7 +11,7 @@ final class ImageService: ImageServiceProtocol {
     func fetchImage(
         posterPath: String,
         size: SizeOfImages,
-        complition: @escaping (GetImageResult) -> Void
+        completion: @escaping (GetImageResult) -> Void
     ) {
         let urlString = "\(StringConstants.imageBaseUrl)\(size.rawValue)\(posterPath)"
         guard let url = URL(string: urlString) else { return }
@@ -21,13 +21,13 @@ final class ImageService: ImageServiceProtocol {
                 let data = response.data
             else {
                 guard let error = response.error else { return }
-                complition(GetImageResult.failure(cinema: error))
+                completion(GetImageResult.failure(cinema: error))
                 return
             }
 
             let dataResult = GetImageResult.succes(cinema: data)
 
-            complition(dataResult)
+            completion(dataResult)
         }
     }
 }

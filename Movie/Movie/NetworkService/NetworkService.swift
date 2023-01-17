@@ -25,16 +25,16 @@ final class NetworkService {
     func sendRequest<T: JSONCodable>(
         urlString: String,
         model: T.Type,
-        complition: @escaping (GetPostResult) -> Void
+        completion: @escaping (GetPostResult) -> Void
     ) {
         if let url = URL(string: urlString) {
             AF.request(url).responseJSON { response in
                 switch response.result {
                 case let .success(value):
                     let json = JSON(value)
-                    complition(GetPostResult.succes(cinema: model.init(json: json)))
+                    completion(GetPostResult.succes(cinema: model.init(json: json)))
                 case let .failure(error):
-                    complition(GetPostResult.failure(cinema: error))
+                    completion(GetPostResult.failure(cinema: error))
                 }
             }
         }
@@ -43,7 +43,7 @@ final class NetworkService {
 
 /// NetworkServiceProtocol method
 extension NetworkService: NetworkServiceProtocol {
-    func fetchCinema(typeOfRequest: TypeOfCinemaRequset, complition: @escaping (GetPostResult) -> Void) {
+    func fetchCinema(typeOfRequest: TypeOfCinemaRequset, completion: @escaping (GetPostResult) -> Void) {
         // swiftlint: disable all
         switch typeOfRequest {
         case .getUpcoming:
@@ -51,21 +51,21 @@ extension NetworkService: NetworkServiceProtocol {
                 urlString: "\(URLBaseStrings.getUpcoming.rawValue)\(keychainService.decodeAPIKey())&\(URLOptionalStrings.language.rawValue)&\(URLOptionalStrings.page.rawValue)",
                 model: InfoAboutCinema.self
             ) { result in
-                complition(result)
+                completion(result)
             }
         case .getPopular:
             sendRequest(
                 urlString: "\(URLBaseStrings.getPopular.rawValue)\(keychainService.decodeAPIKey())&\(URLOptionalStrings.language.rawValue)&\(URLOptionalStrings.page.rawValue)",
                 model: InfoAboutPopularCinema.self
             ) { result in
-                complition(result)
+                completion(result)
             }
         case .topRated:
             sendRequest(
                 urlString: "\(URLBaseStrings.topRated.rawValue)\(keychainService.decodeAPIKey())&\(URLOptionalStrings.language.rawValue)&\(URLOptionalStrings.page.rawValue)",
                 model: InfoAboutCinema.self
             ) { result in
-                complition(result)
+                completion(result)
             }
         }
     }

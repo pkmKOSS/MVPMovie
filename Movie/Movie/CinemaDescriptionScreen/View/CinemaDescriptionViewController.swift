@@ -161,12 +161,12 @@ extension CinemaDescriptionViewController: UITableViewDataSource, UITableViewDel
 }
 
 extension CinemaDescriptionViewController: CinemaDescriptionViewProtocol {
-    func sayHellow() {
+    func updateModuleUI() {
         configureScene()
         tableView.reloadData()
     }
 
-    func hellow() {
-        presenter.sayHellow()
+    func reloadTaviewData() {
+        presenter.reloadUI()
     }
 }

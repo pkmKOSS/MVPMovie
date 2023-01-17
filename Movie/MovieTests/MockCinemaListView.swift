@@ -6,7 +6,6 @@ import Foundation
 
 /// Мок вью контроллера экрана со списком фильмов.
 final class MockCinemaListView: CinemaListViewProtocol {
-
     // MARK: - public methods
 
     func showCinema(cinema: CinemaInfoProtocol) {}

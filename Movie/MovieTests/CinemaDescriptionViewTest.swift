@@ -6,7 +6,6 @@ import XCTest
 
 /// Тесты представления экрана с описанием фильма.
 final class CinemaDescriptionViewTest: XCTestCase {
-
     // MARK: - private constants
 
     private enum Constant {
@@ -46,7 +45,7 @@ final class CinemaDescriptionViewTest: XCTestCase {
     }
 
     func testExample() throws {
-        cinemaDescriptionViewController.hellow()
+        cinemaDescriptionViewController.reloadTaviewData()
     }
 
     func testCell() throws {

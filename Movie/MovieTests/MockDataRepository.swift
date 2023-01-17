@@ -6,7 +6,6 @@ import Foundation
 
 // Мок дата репозитория.
 final class MockDataRepository: DataRepositoryProtocol {
-
     // MARK: - Private properties
 
     private let cinemas: InfoAboutCinema?

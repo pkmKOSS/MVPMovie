@@ -309,13 +309,6 @@
 			path = Presenter;
 			sourceTree = "<group>";
 		};
-		6BA4652A296D98C5001487F8 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Model;
-			sourceTree = "<group>";
-		};
 		6BA4652B296D98D5001487F8 /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -472,7 +465,6 @@
 			isa = PBXGroup;
 			children = (
 				6B9A0D43296F2287004528F3 /* Router */,
-				6BA4652A296D98C5001487F8 /* Model */,
 				6BA46529296D98BD001487F8 /* Presenter */,
 				6BA46528296D98A1001487F8 /* View */,
 			);

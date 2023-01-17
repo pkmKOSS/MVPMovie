@@ -5,10 +5,9 @@ import Foundation
 @testable import Movie
 
 /// Мок сервиса работы с зашифрованными данными
-class MockKeychainService: KeychainServiceProtocol {
-
+final class MockKeychainService: KeychainServiceProtocol {
     // MARK: - public methods
-    
+
     func updateAPI(key: String) {}
 
     func saveAPIkey(key: String) {}

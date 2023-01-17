@@ -6,8 +6,7 @@ import UIKit
 
 /// Мок билдера
 final class MockBuilder: AssemblyBuilderProtocol {
-    
-    // MARK: - public properties
+    // MARK: - public methods
 
     func makeCinemaListModule() -> UIViewController {
         CinemaListViewController()

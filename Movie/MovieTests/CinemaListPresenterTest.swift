@@ -7,7 +7,6 @@ import XCTest
 
 /// Тесты презентера экрана со списком фильмов
 final class CinemaListPresenterTest: XCTestCase {
-
     // MARK: - private constants
 
     private enum Constants {
@@ -39,7 +38,9 @@ final class CinemaListPresenterTest: XCTestCase {
         imageService = MockImageServiceTests(posterPath: Constants.posterPathName)
         dataBaseService = MockDataBaseService()
         networkService = MockNetworkService(keychainService: keychainService)
-        jsonURL = Bundle.main.path(forResource: Constants.cinemaResponseName, ofType: Constants.jsonTypeName) ?? Constants.defaultStringName
+        jsonURL = Bundle.main
+            .path(forResource: Constants.cinemaResponseName, ofType: Constants.jsonTypeName) ?? Constants
+            .defaultStringName
         do {
             let fileURL = URL(fileURLWithPath: jsonURL)
             let data = try Data(contentsOf: fileURL)

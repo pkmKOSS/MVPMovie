@@ -7,7 +7,6 @@ import Foundation
 
 /// Мок сервиса загрузки изображений
 final class MockImageServiceTests: ImageServiceProtocol {
-
     // MARK: - private properties
 
     private let posterPath: String?
@@ -23,8 +22,8 @@ final class MockImageServiceTests: ImageServiceProtocol {
     func fetchImage(
         posterPath: String,
         size: Movie.SizeOfImages,
-        complition: @escaping (Movie.GetImageResult) -> Void
+        completion: @escaping (Movie.GetImageResult) -> Void
     ) {
-        complition(GetImageResult.succes(cinema: Data()))
+        completion(GetImageResult.succes(cinema: Data()))
     }
 }

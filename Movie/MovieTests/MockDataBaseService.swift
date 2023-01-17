@@ -3,17 +3,13 @@
 
 import Foundation
 @testable import Movie
-import Realm
 import RealmSwift
 
 /// Мок сервиса работы с данными.
 final class MockDataBaseService: DataBaseServiceProtocol {
-
     // MARK: - public methpds
-    
-    func saveData<T>(objects: [T]) where T: RealmSwiftObject {}
 
-    func loadData<T>(objectType: T.Type) -> [T]? where T: RealmSwiftObject {
-        []
-    }
+    func saveData<T: Object>(objects: [T]) {}
+
+    func loadData<T: Object>(objectType: T.Type) -> [T]? { [] }
 }
